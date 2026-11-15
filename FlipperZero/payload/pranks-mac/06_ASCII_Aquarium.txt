@@ -1,0 +1,23 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+GUI SPACE
+DELAY 100
+STRING terminal.app
+DELAY 500
+ENTER
+DELAY 1000
+CTRL c
+DELAY 250
+GUI CTRL f
+DELAY 700
+STRING brew install asciiquarium
+DELAY 500
+ENTER
+DELAY 16000
+STRING asciiquarium
+DELAY 250
+ENTER

@@ -1,0 +1,27 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+GUI SPACE
+DELAY 100
+STRING terminal.app
+DELAY 100
+ENTER
+DELAY 1000
+CTRL c
+DELAY 100
+STRING cd ~
+DELAY 100
+ENTER
+DELAY 100
+GUI CTRL f
+DELAY 700
+STRING brew install sl
+DELAY 100
+ENTER
+DELAY 2000
+STRING sl
+DELAY 100
+ENTER

@@ -16,17 +16,22 @@ export function initLogin() {
     else { hide(formLogin); show(formRegistro); }
   };
 
-  window.enviarReset = async () => {
-    const email = $('#forgot-email').value;
-    if (!email) return mostrarToast("Introduce tu correo.", "error");
-    try {
-      const result = await http.post(CONFIG.ENDPOINTS.solicitarReset, { email });
-      if (result.success) {
-        mostrarToast(result.message, 'success');
-        cerrarModal('modal-forgot');
+  const btnEnviarReset = $('#btn-enviar-reset');
+  if (btnEnviarReset) {
+    btnEnviarReset.addEventListener('click', async () => {
+      const email = $('#forgot-email').value;
+      if (!email) return mostrarToast("Introduce tu correo.", "error");
+      try {
+        const result = await http.post(CONFIG.ENDPOINTS.solicitarReset, { email });
+        if (result.success) {
+          mostrarToast(result.message, 'success');
+          cerrarModal('modal-forgot');
+        }
+      } catch (error) { 
+        mostrarToast(error.message, 'error'); 
       }
-    } catch (error) { mostrarToast(error.message, 'error'); }
-  };
+    });
+  }
 
   if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
@@ -46,7 +51,9 @@ export function initLogin() {
             setTimeout(() => window.location.href = 'biblioteca.html', 1000);
           }
         }
-      } catch (error) { mostrarToast(error.message, 'error'); }
+      } catch (error) { 
+        mostrarToast(error.message, 'error'); 
+      }
     });
   }
 
@@ -66,7 +73,9 @@ export function initLogin() {
           hide(formRegistro);
           show(formLogin);
         }
-      } catch (error) { mostrarToast(error.message, 'error'); }
+      } catch (error) { 
+        mostrarToast(error.message, 'error'); 
+      }
     });
   }
 
@@ -75,13 +84,16 @@ export function initLogin() {
     btnVerify2FA.addEventListener('click', async () => {
       const codigo = $('#2fa-codigo').value;
       if (!codigo) return mostrarToast("Introduce el código.", "error");
+      
       try {
         const result = await http.post(CONFIG.ENDPOINTS.verificar2FA, { codigo, metodo: temp2FAMetodo });
         if (result.success) {
           mostrarToast('Login exitoso.', 'success');
           setTimeout(() => window.location.href = 'biblioteca.html', 1000);
         }
-      } catch (error) { mostrarToast(error.message, 'error'); }
+      } catch (error) { 
+        mostrarToast(error.message || 'Código incorrecto', 'error'); 
+      }
     });
   }
 }

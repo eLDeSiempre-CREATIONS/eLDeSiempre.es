@@ -5,12 +5,14 @@ import { comprobarSesion } from '../auth/session.js';
 import { initLibraryRouter } from '../library/router.js';
 import { initAllTools } from '../tools/index.js';
 import { mostrarToast } from '../core/toast.js';
+import { initGlobalSearch } from '../ui/search.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   inicializarTema();
   initDisclaimer();
   initNav();
-  initAllTools(); // <--- INYECTAMOS LAS HERRAMIENTAS INMEDIATAMENTE
+  initAllTools();
+  initGlobalSearch();
 
   comprobarSesion().then((usuario) => {
     if (!usuario) {

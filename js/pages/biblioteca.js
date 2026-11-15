@@ -6,19 +6,18 @@ import { initLibraryRouter } from '../library/router.js';
 import { initAllTools } from '../tools/index.js';
 import { mostrarToast } from '../core/toast.js';
 
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', () => {
   inicializarTema();
   initDisclaimer();
-  await initNav();
-  
-  const usuario = await comprobarSesion();
-  
-  if (!usuario) {
-    mostrarToast("Debes iniciar sesión para acceder a la biblioteca.", "error");
-    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
-    return;
-  }
+  initNav();
+  initAllTools(); // <--- INYECTAMOS LAS HERRAMIENTAS INMEDIATAMENTE
 
-  initAllTools();
-  initLibraryRouter();
+  comprobarSesion().then((usuario) => {
+    if (!usuario) {
+      mostrarToast("Debes iniciar sesión para acceder a la biblioteca.", "error");
+      setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    } else {
+      initLibraryRouter();
+    }
+  });
 });

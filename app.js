@@ -479,7 +479,8 @@ async function cargarBiblioteca() {
         "redes-rec": { titulo: "Redes y Protocolos", icon: "🌐", desc: "Protocolos, análisis de tráfico y arquitecturas de red.", ids: [107, 108, 109] },
         "wifi-rec": { titulo: "Wi-Fi y Radiofrecuencia", icon: "📡", desc: "Hacking de redes inalámbricas, SDR y radiofrecuencia.", ids: [110, 111, 112] },
         "programacion": { titulo: "Programación y Desarrollo", icon: "💻", desc: "Lenguajes, scripts y desarrollo de herramientas propias.", ids: [113, 114, 115] },
-        "hardware": { titulo: "Hardware Hacking", icon: "🛠️", desc: "Dispositivos físicos y herramientas para hacking de hardware.", ids: [116, 117, 118, 119] }
+        "hardware": { titulo: "Hardware Hacking", icon: "🛠️", desc: "Dispositivos físicos y herramientas para hacking de hardware.", ids: [116, 117, 118, 119] },
+        "flipperzero": { titulo: "Flipper Zero", icon: "🐬", desc: "Suite de herramientas BadUSB y scripts para Flipper Zero.", ids: [] }
     };
 
     if (!tipo && !categoriaActual) {
@@ -577,6 +578,32 @@ async function cargarBiblioteca() {
     if (tipo === 'recursos' && categoriaActual) {
         const dataCat = estructuraRecursos[categoriaActual];
         if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
+
+        if (categoriaActual === 'flipperzero') {
+            let html = `
+                <div class="breadcrumb">
+                    <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>Flipper Zero</span>
+                </div>
+                <div class="category-header">
+                    <h2>🐬 Flipper Zero</h2>
+                    <p>Suite de herramientas BadUSB y scripts organizados para tu Flipper Zero.</p>
+                </div>
+                <div class="flipper-tree" style="font-family: monospace; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-main); line-height: 1.8;">
+                    <div>📁 payload/</div>
+                    <div style="margin-left: 20px;">├── 📁 ascii/ <span style="color: var(--text-muted);">(ASCII art)</span></div>
+                    <div style="margin-left: 20px;">├── 📁 pranks-win/ <span style="color: var(--text-muted);">(Pranks Windows)</span></div>
+                    <div style="margin-left: 20px;">├── 📁 pranks-mac/ <span style="color: var(--text-muted);">(Pranks macOS)</span></div>
+                    <div style="margin-left: 20px;">├── 📁 goodusb-mac/ <span style="color: var(--text-muted);">(Utilidades macOS)</span></div>
+                    <div style="margin-left: 20px;">├── 📁 recon-local-mac/ <span style="color: var(--text-muted);">(Recon local macOS)</span></div>
+                    <div style="margin-left: 20px;">└── 📁 chromeos/ <span style="color: var(--text-muted);">(ChromeOS)</span></div>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Copia la carpeta <code>payload/</code> a la SD del Flipper (<code>BadUSB/</code>) y ejecuta los scripts desde el menú.</p>
+                </div>
+            `;
+            contenedor.innerHTML = html;
+            return;
+        }
 
         try {
             const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });

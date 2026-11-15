@@ -1,0 +1,20 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DEFAULTDELAY 500
+CTRL T
+STRING chrome://settings/siteData
+ENTER
+DELAY 3000
+TAB
+DELAY 2000
+STRING brainly
+DELAY 1000
+TAB
+REPEAT 3
+ENTER
+DELAY 1000
+CTRL W

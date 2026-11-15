@@ -1,16 +1,16 @@
 import { inicializarTema } from '../core/theme.js';
 import { initNav } from '../ui/nav.js';
 import { initDisclaimer } from '../ui/disclaimer.js';
-import { comprobarSesion } from '../auth/session.js';
+import { comprobarSesion, comprobarAcceso } from '../auth/session.js';
 import { mostrarToast } from '../core/toast.js';
-import { comprobarAcceso } from '../auth/session.js';
-import { $ } from '../core/dom.js';
+import { initGlobalSearch } from '../ui/search.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
   inicializarTema();
   initDisclaimer();
   await initNav();
   await comprobarSesion();
+  initGlobalSearch();
 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verificado') === '1') {

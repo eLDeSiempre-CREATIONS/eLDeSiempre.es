@@ -1,19 +1,33 @@
 import { CONFIG } from '../core/config.js';
 import { http } from '../core/http.js';
 import { estructuraRecursos } from '../data/resources-registry.js';
-import { getState } from '../core/state.js';
+import { estructuraHerramientas } from '../data/tools-registry.js';
 import { getBadgeClass } from '../core/badges.js';
 import { votarRecurso } from './votes.js';
 
 export function renderResourcesHome(contenedor) {
-  let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Recursos</span></div><h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
+  let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Directorio</span></div>
+              <h2>Directorio de Recursos y Herramientas</h2>
+              <p style="margin-bottom: 20px; color: var(--text-muted);">Explora la mayor base de conocimiento de ciberseguridad en español.</p>
+              <div class="folder-grid">`;
+  
   for (const [slug, data] of Object.entries(estructuraRecursos)) {
+      // Contar elementos (si es custom view, contamos las herramientas, si no, los ids)
+      let count = 0;
+      if (data.customView === 'tools') {
+          count = estructuraHerramientas[data.catFilter]?.herramientas.length || 0;
+      } else {
+          count = data.ids.length;
+      }
+      
+      const badgeText = count > 0 ? `${count} enlaces` : 'Nuevo';
+
       html += `
           <a href="biblioteca.html?tipo=recursos&cat=${slug}" class="folder">
               <div class="folder-icon">${data.icon}</div>
               <h3>${data.titulo}</h3>
               <p>${data.desc}</p>
-              <span class="folder-badge">${data.ids.length > 0 ? data.ids.length : 'Nuevo'} enlaces</span>
+              <span class="folder-badge">${badgeText}</span>
           </a>
       `;
   }
@@ -28,10 +42,52 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return; 
   }
 
+  // Si la categoría es una vista de herramientas personalizada
+  if (dataCat.customView === 'tools') {
+    const toolCatData = estructuraHerramientas[dataCat.catFilter];
+    if (!toolCatData) return;
+
+    let html = `
+        <div class="breadcrumb">
+            <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>${dataCat.titulo}</span>
+        </div>
+        <div class="category-header">
+            <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+            <p>${dataCat.desc}</p>
+            <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
+        </div>
+        <div class="grid-cards" id="lista-herramientas">
+    `;
+
+    toolCatData.herramientas.forEach(h => {
+        html += `
+            <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
+                <h3>${h.titulo}</h3>
+                <p>${h.desc}</p>
+                <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
+            </div>
+        `;
+    });
+
+    html += `</div>`;
+    contenedor.innerHTML = html;
+
+    window.filtrarHerramientas = () => {
+      const input = document.getElementById('buscador-herramientas').value.toLowerCase();
+      const items = document.querySelectorAll('#lista-herramientas .card');
+      items.forEach(item => {
+          const titulo = item.getAttribute('data-titulo');
+          item.style.display = titulo.includes(input) ? 'flex' : 'none';
+      });
+    };
+    return;
+  }
+
+  // Renderizado normal para recursos
   if (categoriaActual === 'flipperzero') {
     let html = `
         <div class="breadcrumb">
-            <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>Flipper Zero</span>
+            <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>Flipper Zero</span>
         </div>
         <div class="category-header">
             <h2>🐬 Flipper Zero</h2>
@@ -60,12 +116,11 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     const result = await http.get(CONFIG.ENDPOINTS.obtenerRecursos);
     
     if (result.success) {
-      // Al haber corregido obtener_recursos.php, result.data ahora es un array plano
       const recursosCat = result.data.filter(r => r.categoria_slug === categoriaActual);
 
       let html = `
           <div class="breadcrumb">
-              <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>${dataCat.titulo}</span>
+              <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>${dataCat.titulo}</span>
           </div>
           <div class="category-header">
               <h2>${dataCat.icon} ${dataCat.titulo}</h2>

@@ -6,7 +6,10 @@ export function inicializarTema() {
   const body = document.body;
   const btn = $('#theme-toggle');
 
-  if (guardado === 'light') body.classList.add('light-mode');
+  if (guardado === 'light') {
+    body.classList.add('light-mode');
+  }
+
   if (!btn) return;
 
   const paint = () => {

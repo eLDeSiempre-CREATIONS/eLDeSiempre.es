@@ -3,8 +3,8 @@ import { initNav } from '../ui/nav.js';
 import { initDisclaimer } from '../ui/disclaimer.js';
 import { comprobarSesion } from '../auth/session.js';
 import { initLibraryRouter } from '../library/router.js';
+import { initAllTools } from '../tools/index.js';
 import { mostrarToast } from '../core/toast.js';
-import { getState } from '../core/state.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
   inicializarTema();
@@ -19,5 +19,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  initAllTools();
   initLibraryRouter();
 });

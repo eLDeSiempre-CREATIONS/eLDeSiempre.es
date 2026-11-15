@@ -42,7 +42,6 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
       </div>
   `;
 
-  // 1. Si estamos en la vista principal de una categoría, mostramos sus subcategorías (carpetas)
   const urlParams = new URLSearchParams(window.location.search);
   const subcatActual = urlParams.get('subcat');
 
@@ -63,7 +62,6 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return;
   }
 
-  // 2. Si estamos en una subcategoría, vemos si es una herramienta interactiva o un recurso normal
   const subcatData = dataCat.subcats.find(s => s.slug === subcatActual);
   if (!subcatData) {
     contenedor.innerHTML = "<p>Subcategoría no encontrada.</p>";
@@ -80,7 +78,6 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
       </div>
   `;
 
-  // A) Renderizar herramienta interactiva
   if (subcatData.customView === 'tools') {
     const toolCatData = estructuraHerramientas[subcatData.catFilter];
     if (!toolCatData) return;
@@ -113,7 +110,6 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return;
   }
 
-  // B) Renderizar Flipper Zero
   if (subcatData.customView === 'flipper') {
     html += `
         <div class="flipper-tree" style="font-family: monospace; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-main); line-height: 1.8;">
@@ -133,15 +129,13 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return;
   }
 
-  // C) Renderizar recursos normales (desde la API)
   contenedor.innerHTML = html + `<p style="text-align: center; color: var(--text-muted);">Cargando recursos...</p>`;
 
   try {
     const result = await http.get(CONFIG.ENDPOINTS.obtenerRecursos);
     
     if (result.success) {
-      // Filtramos por el slug de la subcategoría
-      const recursosCat = result.data.filter(r => r.categoria_slug === subcatData.slug);
+      const recursosCat = result.data.filter(r => r.categoria_id === subcatData.catId);
 
       let htmlRecursos = `
           <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">

@@ -22,27 +22,8 @@
     <title>Donde la seguridad y el conocimiento se encuentran</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="styles.css">
-    <script>
-      var _paq = window._paq = window._paq || [];
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//matomo.eldesiempre.es/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '1']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
 </head>
-<body class="locked" data-nav="inicio">
-    <script>
-        if (localStorage.getItem('disclaimerAceptado') === 'true') {
-            document.body.classList.remove('locked');
-            document.write('<style>#disclaimer-modal { display: none !important; }</style>');
-        }
-    </script>
-
+<body data-nav="inicio">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     <div id="toast-container" role="status" aria-live="polite"></div>
 
@@ -60,7 +41,7 @@
         </div>
     </div>
 
-    <div id="cookie-banner" role="region" aria-label="Aviso de cookies">
+    <div id="cookie-banner" role="region" aria-label="Aviso de cookies" style="display: none;">
         <p>Utilizamos cookies propias y de terceros (Matomo) para analizar el tráfico. Puedes aceptarlas o rechazarlas. <a href="#" onclick="mostrarAvisoLegal(event)">Más información</a>.</p>
         <div>
             <button class="btn-secondary" onclick="aceptarCookies(false)">Rechazar</button>
@@ -211,15 +192,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        function filtrarNivel(nivel, btn) {
-            document.querySelectorAll('.filter-container button').forEach(b => b.classList.remove('active-filter'));
-            btn.classList.add('active-filter');
-            document.querySelectorAll('.guia-item').forEach(item => {
-                item.style.display = (nivel === 'todos' || item.getAttribute('data-nivel') === nivel) ? 'flex' : 'none';
-            });
-        }
-    </script>
+    <script type="module" src="js/pages/index.js"></script>
 </body>
 </html>

@@ -82,7 +82,7 @@ export function initLogin() {
   const btnVerify2FA = $('#btn-verificar-2fa');
   if (btnVerify2FA) {
     btnVerify2FA.addEventListener('click', async () => {
-      const codigo = $('#2fa-codigo').value;
+      const codigo = $('#codigo-2fa').value;
       if (!codigo) return mostrarToast("Introduce el código.", "error");
       
       try {

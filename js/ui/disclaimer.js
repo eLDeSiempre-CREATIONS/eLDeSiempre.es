@@ -1,6 +1,6 @@
 import { CONFIG } from '../core/config.js';
 import { $ } from '../core/dom.js';
-import { abrirModal, cerrarModal } from '../core/modal.js';
+import { abrirModal } from '../core/modal.js';
 
 export function comprobarDisclaimer() {
   const modal = $('#disclaimer-modal');

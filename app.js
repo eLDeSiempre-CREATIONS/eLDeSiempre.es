@@ -478,7 +478,7 @@ async function cargarBiblioteca() {
         "redes-rec": { titulo: "Redes y Protocolos", icon: "🌐", desc: "Protocolos, análisis de tráfico y arquitecturas de red.", ids: [107, 108, 109] },
         "wifi-rec": { titulo: "Wi-Fi y Radiofrecuencia", icon: "📡", desc: "Hacking de redes inalámbricas, SDR y radiofrecuencia.", ids: [110, 111, 112] },
         "programacion": { titulo: "Programación y Desarrollo", icon: "💻", desc: "Lenguajes, scripts y desarrollo de herramientas propias.", ids: [113, 114, 115] },
-        "flipper": { titulo: "Flipper Zero", icon: "🐬", desc: "Repositorios, firmwares y recursos para el multiherramienta de hacking ético.", ids: [116, 117, 118, 119] }
+        "hardware": { titulo: "Hardware Hacking", icon: "🛠️", desc: "Dispositivos físicos y herramientas para hacking de hardware.", ids: [116, 117, 118, 119] }
     };
 
     if (!tipo && !categoriaActual) {
@@ -577,94 +577,13 @@ async function cargarBiblioteca() {
         const dataCat = estructuraRecursos[categoriaActual];
         if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
 
-        if (categoriaActual === 'flipper') {
-            let html = `
-                <div class="breadcrumb">
-                    <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>Flipper Zero</span>
-                </div>
-                <div class="category-header">
-                    <h2>🐬 Flipper Zero</h2>
-                    <p>Repositorios y recursos esenciales para exprimir al máximo el multiherramienta de hacking ético.</p>
-                </div>
-                <ul class="resource-list">
-                    <li class="resource-item">
-                        <div class="resource-header">
-                            <span class="resource-title">UberGuidoZ / Flipper</span>
-                            <span class="badge badge-hacker">Repositorio</span>
-                        </div>
-                        <div class="resource-desc">El repositorio comunitario más importante para Flipper Zero. Contiene una colección masiva de archivos organizados por Sub-GHz, NFC, RFID, Infrared, BadUSB y gráficos. Es el punto de partida ideal para llenar tu SD con señales y scripts probados por la comunidad.</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: Tener una base sólida de archivos y señales.</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="https://github.com/UberGuidoZ/Flipper" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
-                        </div>
-                    </li>
-                    <li class="resource-item">
-                        <div class="resource-header">
-                            <span class="resource-title">UberGuidoZ / Flipper-IRDB</span>
-                            <span class="badge badge-hacker">Base de Datos IR</span>
-                        </div>
-                        <div class="resource-desc">La base de datos de códigos infrarrojos mantenida por la comunidad más grande que existe. Organizada por fabricante y tipo de dispositivo (TVs, aires acondicionados, LEDs, etc.). Si tu mando no está aquí, probablemente no exista.</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: Controlar cualquier dispositivo con IR.</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="https://github.com/UberGuidoZ/Flipper-IRDB" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
-                        </div>
-                    </li>
-                    <li class="resource-item">
-                        <div class="resource-header">
-                            <span class="resource-title">justcallmekoko / ESP32Marauder</span>
-                            <span class="badge badge-herramienta">Firmware</span>
-                        </div>
-                        <div class="resource-desc">El firmware de referencia para el módulo WiFi Dev Board del Flipper. Convierte tu Flipper en una potente herramienta de auditoría Wi-Fi y Bluetooth: escaneo de redes, captura de handshakes, ataques de desautenticación y wardriving. Requiere instalar la app Companion en el Flipper.</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: Auditorías de redes inalámbricas.</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="https://github.com/justcallmekoko/ESP32Marauder" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
-                        </div>
-                    </li>
-                    <li class="resource-item">
-                        <div class="resource-header">
-                            <span class="resource-title">djsime1 / awesome-flipperzero</span>
-                            <span class="badge badge-libro">Lista Curada</span>
-                        </div>
-                        <div class="resource-desc">Una lista curada de recursos, aplicaciones, firmwares y herramientas para Flipper Zero. Es el mejor lugar para descubrir nuevas apps, juegos y utilidades que no conocías. Mantenida y actualizada por la comunidad.</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: Descubrir nuevas apps y recursos.</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="https://github.com/djsime1/awesome-flipperzero" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
-                        </div>
-                    </li>
-                    <li class="resource-item">
-                        <div class="resource-header">
-                            <span class="resource-title">SYOP200 / Flipper-Zero-Downloads</span>
-                            <span class="badge badge-doc">Colección</span>
-                        </div>
-                        <div class="resource-desc">Una colección curada de plugins, archivos y firmwares para Flipper Zero. Organizada por tipo de archivo (Firmware, GPIO, Apps, Sub-GHz, Infrared, NFC, BadUSB, etc.). Muy útil si quieres descargar todo en un solo lugar sin tener que buscar repo por repo.</div>
-                        <div class="resource-meta">
-                            <span class="resource-ideal">Ideal para: Descargar paquetes completos de archivos.</span>
-                        </div>
-                        <div class="resource-actions">
-                            <a href="https://github.com/SYOP200/Flipper-Zero-Downloads" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
-                        </div>
-                    </li>
-                </ul>
-            `;
-            contenedor.innerHTML = html;
-            return;
-        }
-
         try {
             const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
             if (!response.ok) throw new Error("Error de red");
             const result = await response.json();
 
             if (result.success) {
-                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)) || (categoriaActual === "metodos" && r.categoria_id == 10) || (categoriaActual === "iot" && r.categoria_id == 11) || (categoriaActual === "redes-rec" && r.categoria_id == 12) || (categoriaActual === "wifi-rec" && r.categoria_id == 13) || (categoriaActual === "programacion" && r.categoria_id == 14));
+                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)) || (categoriaActual === "metodos" && r.categoria_id == 10) || (categoriaActual === "iot" && r.categoria_id == 11) || (categoriaActual === "redes-rec" && r.categoria_id == 12) || (categoriaActual === "wifi-rec" && r.categoria_id == 13) || (categoriaActual === "programacion" && r.categoria_id == 14) || (categoriaActual === "hardware" && r.categoria_id == 15));
 
                 let html = `
                     <div class="breadcrumb">

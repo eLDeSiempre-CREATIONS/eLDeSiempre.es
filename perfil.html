@@ -11,7 +11,20 @@
 <body>
     <div id="toast-container"></div>
 
-    <header></header>
+    <header>
+        <button class="logo-container" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
+            <div class="logo-text">eLDeSiempre<span>.es</span></div>
+        </button>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='biblioteca.html'">Biblioteca</button>
+            <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
+            <button class="nav-btn active" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
+            <button class="nav-btn btn-login" id="nav-login-btn" onclick="window.location.href='login.html'">Acceder</button>
+            <button class="nav-btn" id="nav-logout-btn" style="display:none; color:var(--danger); border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
+        </nav>
+    </header>
 
     <main class="container" style="display: none;">
         <h2>Mi Perfil Profesional</h2>

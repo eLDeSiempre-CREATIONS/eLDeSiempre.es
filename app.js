@@ -132,10 +132,11 @@ function protegerContenidoPrivado() {
         if (mainContent && !window.location.search.includes('cat=')) { 
             mainContent.style.display = 'none';
             setTimeout(() => {
-                if (usuarioLogueado) mainContent.style.display = 'block';
-                else {
-                    mostrarToast("Acceso denegado.", "error");
-                    setTimeout(() => window.location.href = 'login.html', 1000);
+                if (usuarioLogueado) {
+                    mainContent.style.display = 'block';
+                } else {
+                    mostrarToast("Debes iniciar sesión para acceder a la biblioteca.", "error");
+                    setTimeout(() => window.location.href = 'index.html', 1000);
                 }
             }, 500);
         } else if (mainContent) {

@@ -1,0 +1,20 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 500
+GUI r
+DELAY 300
+STRING powershell Start-Process powershell -Verb runAs
+DELAY 200
+ENTER
+DELAY 600
+LEFTARROW
+DELAY 300
+ENTER
+DELAY 450
+STRING (new-object -com wscript.shell).SendKeys([char]173)
+DELAY 200
+ENTER

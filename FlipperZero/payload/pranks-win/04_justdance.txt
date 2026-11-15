@@ -1,0 +1,28 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 700
+GUI r
+DELAY 650
+STRING powershell Start-Process powershell -Verb runAs
+DELAY 650
+ENTER
+DELAY 650
+LEFTARROW
+DELAY 650
+ENTER
+DELAY 650
+STRING Set-Volume 100; Function Set-Volume { Param([Parameter(Mandatory=$true)][ValidateRange(0,100)][Int]$volume); $keyPresses = [Math]::Ceiling( $volume / 2 ); $obj = New-Object -ComObject WScript.Shell; 1..50 | ForEach-Object {  $obj.SendKeys( [char] 174 )  }; for( $i = 0; $i -lt $keyPresses; $i++ ) {$obj.SendKeys( [char] 175 )}; }
+DELAY 650
+ENTER
+DELAY 650
+STRING Set-Volume 100; Function Set-Volume { Param([Parameter(Mandatory=$true)][ValidateRange(0,100)][Int]$volume); $keyPresses = [Math]::Ceiling( $volume / 2 ); $obj = New-Object -ComObject WScript.Shell; 1..50 | ForEach-Object {  $obj.SendKeys( [char] 174 )  }; for( $i = 0; $i -lt $keyPresses; $i++ ) {$obj.SendKeys( [char] 175 )}; }
+DELAY 650
+ENTER
+DELAY 550
+STRING Start-Process -WindowStyle Hidden "https://www.youtube.com/watch?v=7W9IOhk1-z4"
+DELAY 500
+ENTER

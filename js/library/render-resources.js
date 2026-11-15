@@ -12,22 +12,12 @@ export function renderResourcesHome(contenedor) {
               <div class="folder-grid">`;
   
   for (const [slug, data] of Object.entries(estructuraRecursos)) {
-      // Contar elementos (si es custom view, contamos las herramientas, si no, los ids)
-      let count = 0;
-      if (data.customView === 'tools') {
-          count = estructuraHerramientas[data.catFilter]?.herramientas.length || 0;
-      } else {
-          count = data.ids.length;
-      }
-      
-      const badgeText = count > 0 ? `${count} enlaces` : 'Nuevo';
-
       html += `
           <a href="biblioteca.html?tipo=recursos&cat=${slug}" class="folder">
               <div class="folder-icon">${data.icon}</div>
               <h3>${data.titulo}</h3>
               <p>${data.desc}</p>
-              <span class="folder-badge">${badgeText}</span>
+              <span class="folder-badge">Explorar</span>
           </a>
       `;
   }
@@ -42,20 +32,61 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return; 
   }
 
-  // Si la categoría es una vista de herramientas personalizada
-  if (dataCat.customView === 'tools') {
-    const toolCatData = estructuraHerramientas[dataCat.catFilter];
+  let html = `
+      <div class="breadcrumb">
+          <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>${dataCat.titulo}</span>
+      </div>
+      <div class="category-header">
+          <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+          <p>${dataCat.desc}</p>
+      </div>
+  `;
+
+  // 1. Si estamos en la vista principal de una categoría, mostramos sus subcategorías (carpetas)
+  const urlParams = new URLSearchParams(window.location.search);
+  const subcatActual = urlParams.get('subcat');
+
+  if (!subcatActual) {
+    html += `<div class="folder-grid">`;
+    dataCat.subcats.forEach(sub => {
+      html += `
+          <a href="biblioteca.html?tipo=recursos&cat=${categoriaActual}&subcat=${sub.slug}" class="folder">
+              <div class="folder-icon">${sub.icon}</div>
+              <h3>${sub.titulo}</h3>
+              <p>${sub.desc}</p>
+              <span class="folder-badge">Ver contenido</span>
+          </a>
+      `;
+    });
+    html += `</div>`;
+    contenedor.innerHTML = html;
+    return;
+  }
+
+  // 2. Si estamos en una subcategoría, vemos si es una herramienta interactiva o un recurso normal
+  const subcatData = dataCat.subcats.find(s => s.slug === subcatActual);
+  if (!subcatData) {
+    contenedor.innerHTML = "<p>Subcategoría no encontrada.</p>";
+    return;
+  }
+
+  html = `
+      <div class="breadcrumb">
+          <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <a href="biblioteca.html?tipo=recursos&cat=${categoriaActual}">${dataCat.titulo}</a> / <span>${subcatData.titulo}</span>
+      </div>
+      <div class="category-header">
+          <h2>${subcatData.icon} ${subcatData.titulo}</h2>
+          <p>${subcatData.desc}</p>
+      </div>
+  `;
+
+  // A) Renderizar herramienta interactiva
+  if (subcatData.customView === 'tools') {
+    const toolCatData = estructuraHerramientas[subcatData.catFilter];
     if (!toolCatData) return;
 
-    let html = `
-        <div class="breadcrumb">
-            <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>${dataCat.titulo}</span>
-        </div>
-        <div class="category-header">
-            <h2>${dataCat.icon} ${dataCat.titulo}</h2>
-            <p>${dataCat.desc}</p>
-            <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
-        </div>
+    html += `
+        <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
         <div class="grid-cards" id="lista-herramientas">
     `;
 
@@ -68,7 +99,6 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
             </div>
         `;
     });
-
     html += `</div>`;
     contenedor.innerHTML = html;
 
@@ -83,16 +113,9 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return;
   }
 
-  // Renderizado normal para recursos
-  if (categoriaActual === 'flipperzero') {
-    let html = `
-        <div class="breadcrumb">
-            <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>Flipper Zero</span>
-        </div>
-        <div class="category-header">
-            <h2>🐬 Flipper Zero</h2>
-            <p>Suite de herramientas BadUSB y scripts organizados para tu Flipper Zero.</p>
-        </div>
+  // B) Renderizar Flipper Zero
+  if (subcatData.customView === 'flipper') {
+    html += `
         <div class="flipper-tree" style="font-family: monospace; background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border); color: var(--text-main); line-height: 1.8;">
             <div>📁 payload/</div>
             <div style="margin-left: 20px;">├── 📁 ascii/ <span style="color: var(--text-muted);">(ASCII art)</span></div>
@@ -110,23 +133,18 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
     return;
   }
 
-  contenedor.innerHTML = `<p style="text-align: center; color: var(--text-muted);">Cargando recursos...</p>`;
+  // C) Renderizar recursos normales (desde la API)
+  contenedor.innerHTML = html + `<p style="text-align: center; color: var(--text-muted);">Cargando recursos...</p>`;
 
   try {
     const result = await http.get(CONFIG.ENDPOINTS.obtenerRecursos);
     
     if (result.success) {
-      const recursosCat = result.data.filter(r => r.categoria_slug === categoriaActual);
+      // Filtramos por el slug de la subcategoría
+      const recursosCat = result.data.filter(r => r.categoria_slug === subcatData.slug);
 
-      let html = `
-          <div class="breadcrumb">
-              <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Directorio</a> / <span>${dataCat.titulo}</span>
-          </div>
-          <div class="category-header">
-              <h2>${dataCat.icon} ${dataCat.titulo}</h2>
-              <p>${dataCat.desc}</p>
-              <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
-          </div>
+      let htmlRecursos = `
+          <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
           <ul class="resource-list" id="lista-recursos">
       `;
 
@@ -134,7 +152,7 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
           const badgeClass = getBadgeClass(r.tipo);
           const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
           const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
-          html += `
+          htmlRecursos += `
               <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
                   <div class="resource-header">
                       <span class="resource-title">${r.titulo}</span>
@@ -153,11 +171,11 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
       });
 
       if (recursosCat.length === 0) {
-          html += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta categoría.</li>`;
+          htmlRecursos += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta subcategoría.</li>`;
       }
 
-      html += `</ul>`;
-      contenedor.innerHTML = html;
+      htmlRecursos += `</ul>`;
+      contenedor.innerHTML = html + htmlRecursos;
 
       window.filtrarRecursos = () => {
         const input = document.getElementById('buscador-recursos').value.toLowerCase();
@@ -169,6 +187,9 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
       };
     }
   } catch (error) {
-    contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos. Asegúrate de tener sesión iniciada.</p>";
+    contenedor.innerHTML = `<p style='color: var(--danger); text-align:center; padding: 20px;'>
+      Error al cargar los recursos.<br>
+      <small style="color: var(--text-main);">${error.message}</small>
+    </p>`;
   }
 }

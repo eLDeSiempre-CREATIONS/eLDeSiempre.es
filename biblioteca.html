@@ -24,8 +24,9 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 </head>
-<body>
-    <div id="toast-container"></div>
+<body data-nav="biblioteca">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
     <header>
         <button class="logo-container" onclick="window.location.href='index.html'">
@@ -42,7 +43,7 @@
         </nav>
     </header>
 
-    <main class="container" id="contenedor-biblioteca">
+    <main class="container" id="contenedor-biblioteca" id="main-content">
     </main>
 
     <div id="modales-herramientas">
@@ -77,6 +78,6 @@
         <div class="modal-overlay" id="modal-qr-token"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-qr-token')">×</button><h2>Código QR</h2><p>Selecciona esta opción en la web de Canarytokens.</p><button class="btn-primary" onclick="abrirCanarytoken('QR', 'Alerta si escanean el QR')">Ir a Canarytokens</button></div></div>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="js/pages/biblioteca.js"></script>
 </body>
 </html>

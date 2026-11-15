@@ -132,10 +132,11 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
   contenedor.innerHTML = html + `<p style="text-align: center; color: var(--text-muted);">Cargando recursos...</p>`;
 
   try {
-    const result = await http.get(CONFIG.ENDPOINTS.obtenerRecursos);
+    const queryUrl = subcatData.catId ? `${CONFIG.ENDPOINTS.obtenerRecursos}?cat_id=${subcatData.catId}` : CONFIG.ENDPOINTS.obtenerRecursos;
+    const result = await http.get(queryUrl);
     
     if (result.success) {
-      const recursosCat = result.data.filter(r => r.categoria_id === subcatData.catId);
+      const recursosCat = result.data;
 
       let htmlRecursos = `
           <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">

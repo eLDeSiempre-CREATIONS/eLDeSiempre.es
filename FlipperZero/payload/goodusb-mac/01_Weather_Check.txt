@@ -1,0 +1,18 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 500
+GUI SPACE 
+DELAY 500
+STRING TERMINAL 
+DELAY 1000
+ENTER
+DELAY 500
+STRING CURL WTTR.IN/Madrid
+DELAY 500
+ENTER 
+DELAY 500
+GUI-CTRL F

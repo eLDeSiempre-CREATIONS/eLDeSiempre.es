@@ -1,0 +1,18 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 300
+GUI SPACE
+DELAY 500
+STRING terminal.app
+DELAY 1000
+ENTER
+DELAY 1500
+STRING open http://fakeupdate.net/apple/
+ENTER
+DELAY 1000
+GUI-CTRL F
+DELAY 250

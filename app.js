@@ -1,347 +1,26 @@
 const API_URL = 'https://api.eldesiempre.es';
-
-const NAV_ITEMS = [
-    { label: 'Inicio', href: 'index.html', key: 'inicio' },
-    { label: 'Aprender', href: 'index.html#rutas', key: 'aprender' },
-    { label: 'Biblioteca', href: 'biblioteca.html', key: 'biblioteca' },
-    { label: 'Mi Perfil', href: 'perfil.html', key: 'perfil', requiresAuth: true },
-    { label: 'Contacto', href: 'contacto.html', key: 'contacto' }
-];
-
-const GUIAS = {
-    'introduccion-ciberseguridad': {
-        titulo: 'Introducción a la Ciberseguridad',
-        nivel: 'Principiante',
-        requiere_login: 0,
-        contenido: `
-            <h2>¿Qué es la ciberseguridad?</h2>
-            <p>La ciberseguridad protege sistemas, redes, dispositivos y datos frente a ataques digitales. Se basa en la <strong>tríada CIA</strong>:</p>
-            <ul>
-                <li><strong>Confidencialidad:</strong> solo personas autorizadas acceden a la información.</li>
-                <li><strong>Integridad:</strong> los datos no se modifican sin autorización.</li>
-                <li><strong>Disponibilidad:</strong> los sistemas están accesibles cuando se necesitan.</li>
-            </ul>
-            <h2>Tipos de atacantes</h2>
-            <ul>
-                <li><strong>Black hat:</strong> actúan ilegalmente por beneficio propio.</li>
-                <li><strong>White hat:</strong> hackers éticos con permiso.</li>
-                <li><strong>Grey hat:</strong> entre ambos, sin permiso pero sin malicia.</li>
-                <li><strong>Script kiddie:</strong> usan herramientas sin entenderlas.</li>
-            </ul>
-            <h2>Vectores de ataque comunes</h2>
-            <ol>
-                <li><strong>Phishing:</strong> engaño por email o web.</li>
-                <li><strong>Malware:</strong> virus, troyanos, ransomware.</li>
-                <li><strong>Fuerza bruta:</strong> probar contraseñas.</li>
-                <li><strong>Ingeniería social:</strong> manipular personas.</li>
-            </ol>
-        `
-    },
-    'introduccion-internet': {
-        titulo: '¿Qué es Internet?',
-        nivel: 'Principiante',
-        requiere_login: 0,
-        contenido: `
-            <h2>El viaje de un paquete</h2>
-            <p>Internet es una red de redes. Cuando envías un mensaje, este se divide en paquetes que viajan por routers hasta su destino.</p>
-            <h2>Direcciones IP</h2>
-            <p>Cada dispositivo tiene una IP (como una dirección postal). IPv4 usa 4 números (ej: 192.168.1.1). IPv6 es el futuro y usa hexadecimal.</p>
-            <h2>El DNS</h2>
-            <p>Es la guía telefónica de Internet. Traduce nombres como <code>google.com</code> a direcciones IP como <code>142.250.184.14</code>.</p>
-            <h2>HTTP vs HTTPS</h2>
-            <p>HTTP transmite datos en texto plano. HTTPS añade una capa de cifrado (TLS) que protege la información.</p>
-        `
-    },
-    'comandos-linux': {
-        titulo: 'Supervivencia en Linux',
-        nivel: 'Fácil',
-        requiere_login: 0,
-        contenido: `
-            <h2>Comandos esenciales</h2>
-            <p>El hacking ético se hace en la terminal. Aprende estos comandos:</p>
-            <ul>
-                <li><code>ls</code>: Lista archivos.</li>
-                <li><code>cd</code>: Cambia de directorio.</li>
-                <li><code>pwd</code>: Muestra la ruta actual.</li>
-                <li><code>cat</code>: Muestra el contenido de un archivo.</li>
-                <li><code>grep</code>: Busca texto dentro de archivos.</li>
-                <li><code>chmod</code>: Cambia permisos de archivos.</li>
-                <li><code>sudo</code>: Ejecuta comandos como superusuario.</li>
-            </ul>
-            <h2>Gestión de paquetes</h2>
-            <p>En Kali/Debian usa <code>apt update && apt upgrade</code>. En Arch usa <code>pacman -Syu</code>.</p>
-        `
-    },
-    'redes-basico': {
-        titulo: 'Redes para Hackers',
-        nivel: 'Principiante',
-        requiere_login: 0,
-        contenido: `
-            <h2>Direcciones IP y Máscaras</h2>
-            <p>La máscara <code>/24</code> (255.255.255.0) define la red. El resto son hosts.</p>
-            <h2>Puertos comunes</h2>
-            <ul>
-                <li><strong>21:</strong> FTP</li>
-                <li><strong>22:</strong> SSH</li>
-                <li><strong>80:</strong> HTTP</li>
-                <li><strong>443:</strong> HTTPS</li>
-                <li><strong>3306:</strong> MySQL</li>
-            </ul>
-            <h2>TCP vs UDP</h2>
-            <p>TCP garantiza la entrega (handshake de 3 vías). UDP es más rápido pero no garantiza entrega.</p>
-        `
-    },
-    'ctf-para-principiantes': {
-        titulo: 'CTFs: Tu primer paso práctico',
-        nivel: 'Intermedio',
-        requiere_login: 0,
-        contenido: `
-            <h2>¿Qué es un CTF?</h2>
-            <p>Capture The Flag (CTF) son competiciones de hacking ético donde debes encontrar "banderas" (textos ocultos) resolviendo retos de seguridad.</p>
-            <h2>Plataformas recomendadas</h2>
-            <ul>
-                <li><strong>OverTheWire:</strong> Ideal para empezar. Bandit es el nivel más básico para aprender Linux y comandos.</li>
-                <li><strong>TryHackMe:</strong> Salas guiadas paso a paso. Perfecto para principiantes.</li>
-                <li><strong>Hack The Box:</strong> Más avanzado, máquinas sin guía (retiradas).</li>
-                <li><strong>PicoCTF:</strong> Organizado por Carnegie Mellon, enfocado a estudiantes.</li>
-            </ul>
-            <h2>¿Cómo empezar?</h2>
-            <p>Conéctate por SSH a OverTheWire Bandit. Usa comandos básicos de Linux para leer archivos y encontrar la contraseña del siguiente nivel.</p>
-            <p>Comando de ejemplo: <code>ssh bandit0@bandit.labs.overthewire.org -p 2220</code></p>
-        `
-    },
-    'overthewire-wargames': {
-        titulo: 'OverTheWire: Wargames',
-        nivel: 'Intermedio',
-        requiere_login: 0,
-        contenido: `
-            <h2>El camino del hacker</h2>
-            <p>OverTheWire ofrece una serie de wargames (juegos de guerra) para practicar habilidades reales.</p>
-            <h2>Bandit (Nivel 0-34)</h2>
-            <p>Enseña comandos básicos de Linux, manejo de archivos, permisos y búsquedas.</p>
-            <h2>Natas (Web)</h2>
-            <p>Retos de seguridad web. Aprenderás sobre inyección SQL, XSS, LFI y más.</p>
-            <h2>Leviathan y Krypton</h2>
-            <p>Criptografía y binarios. Para cuando ya domines lo básico.</p>
-            <h2>Recursos</h2>
-            <p>Visita <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener">overthewire.org</a> y empieza por Bandit.</p>
-        `
-    },
-    'modelo-osi-redes': {
-        titulo: 'El Modelo OSI',
-        nivel: 'Intermedio',
-        requiere_login: 0,
-        contenido: `
-            <h2>Las 7 capas de la red</h2>
-            <ol>
-                <li><strong>Física:</strong> Cables, señales eléctricas.</li>
-                <li><strong>Enlace de datos:</strong> MAC addresses, switches.</li>
-                <li><strong>Red:</strong> IPs, routers.</li>
-                <li><strong>Transporte:</strong> TCP/UDP, puertos.</li>
-                <li><strong>Sesión:</strong> Gestión de conexiones.</li>
-                <li><strong>Presentación:</strong> Cifrado, formatos.</li>
-                <li><strong>Aplicación:</strong> HTTP, DNS, FTP.</li>
-            </ol>
-            <p>Los ataques ocurren en diferentes capas. Un ataque ARP Spoofing está en la capa 2. Un ataque HTTP en la capa 7.</p>
-        `
-    },
-    'redes-inalambricas': {
-        titulo: 'Hacking Wi-Fi y Bluetooth',
-        nivel: 'Intermedio',
-        requiere_login: 0,
-        contenido: `
-            <h2>Wi-Fi</h2>
-            <p>Protocolos WEP (obsoleto), WPA2 (común) y WPA3 (seguro). Los ataques más comunes son deautenticación y handshake capture.</p>
-            <h2>Herramientas</h2>
-            <ul>
-                <li><strong>Aircrack-ng:</strong> Suite para capturar y crackear handshakes.</li>
-                <li><strong>Wifite:</strong> Automatiza ataques Wi-Fi.</li>
-            </ul>
-            <h2>Bluetooth</h2>
-            <p>Ataques como Bluejacking (envío de mensajes no deseados) y Bluesnarfing (robo de datos).</p>
-        `
-    },
-    'hacking-etico-redes': {
-        titulo: 'Escaneo de Redes con Nmap',
-        nivel: 'Avanzado',
-        requiere_login: 1,
-        contenido: `
-            <h2>¿Qué es Nmap?</h2>
-            <p>Network Mapper es la herramienta estándar para descubrir hosts y servicios en una red.</p>
-            <h2>Comandos básicos</h2>
-            <ul>
-                <li><code>nmap -sS -p- 192.168.1.1</code>: Escaneo SYN de todos los puertos.</li>
-                <li><code>nmap -sV 192.168.1.1</code>: Detecta versiones de servicios.</li>
-                <li><code>nmap -O 192.168.1.1</code>: Intenta detectar el sistema operativo.</li>
-                <li><code>nmap -A 192.168.1.1</code>: Escaneo agresivo (todo).</li>
-            </ul>
-            <h2>Ética</h2>
-            <p>Nunca escanees redes que no te pertenezcan o para las que no tengas permiso explícito.</p>
-        `
-    },
-    'red-team-pentesting': {
-        titulo: 'Red Team: Active Directory',
-        nivel: 'Experto',
-        requiere_login: 1,
-        contenido: `
-            <h2>Active Directory (AD)</h2>
-            <p>El directorio de identidades de Windows. Es el objetivo principal en entornos corporativos.</p>
-            <h2>Ataques comunes</h2>
-            <ul>
-                <li><strong>Kerberoasting:</strong> Extraer tickets de servicio y crackearlos offline.</li>
-                <li><strong>Pass-the-Hash:</strong> Usar hashes NTLM para autenticarse sin contraseña.</li>
-                <li><strong>BloodHound:</strong> Herramienta para mapear relaciones en AD y encontrar caminos de ataque.</li>
-            </ul>
-            <h2>Herramientas</h2>
-            <p>Impacket, Mimikatz, CrackMapExec, BloodHound.</p>
-        `
-    }
-};
-
-const SECCIONES_BIBLIOTECA = {
-    herramientas: {
-        titulo: 'Laboratorio de Herramientas',
-        icono: '🛠️',
-        descripcion: 'Utilidades interactivas para análisis, pruebas y conversiones en tiempo real.',
-        categorias: {
-            'red-team': {
-                titulo: 'Red Team & Pentesting',
-                icono: '⚔️',
-                descripcion: 'Simula ataques, encuentra vulnerabilidades y explota sistemas.',
-                items: [
-                    { id: 'dorks', titulo: 'Generador de Dorks', descripcion: 'Crea consultas avanzadas para Google que revelan archivos ocultos o paneles de administración.', ideal: 'Encontrar documentos filtrados.' },
-                    { id: 'payloads', titulo: 'Generador de Payloads', descripcion: 'Genera payloads básicos para probar inyecciones SQL, XSS o LFI.', ideal: 'Pruebas de concepto rápidas.' },
-                    { id: 'cve', titulo: 'Buscador de CVEs', descripcion: 'Consulta vulnerabilidades conocidas por nombre de software.', ideal: 'Investigar fallos de seguridad.' }
-                ]
-            },
-            'blue-team': {
-                titulo: 'Blue Team & Forense',
-                icono: '🛡️',
-                descripcion: 'Defensa, análisis de malware y respuesta a incidentes.',
-                items: [
-                    { id: 'hash', titulo: 'Analizador de Hash', descripcion: 'Identifica el algoritmo de un hash (MD5, SHA-1, SHA-256).', ideal: 'Verificar integridad de archivos.' },
-                    { id: 'ssl', titulo: 'Analizador SSL/TLS', descripcion: 'Comprueba el certificado de seguridad de un sitio web.', ideal: 'Auditar servidores.' },
-                    { id: 'http-headers', titulo: 'Inspector de Cabeceras HTTP', descripcion: 'Analiza las cabeceras de seguridad de un servidor.', ideal: 'Auditar configuraciones web.' }
-                ]
-            },
-            'osint': {
-                titulo: 'OSINT e Inteligencia',
-                icono: '🕵️',
-                descripcion: 'Recopila información de fuentes abiertas.',
-                items: [
-                    { id: 'osint', titulo: 'OSINT Framework', descripcion: 'Mapa visual de herramientas y fuentes de información pública.', ideal: 'Saber por dónde empezar.' },
-                    { id: 'ip', titulo: 'Buscador de IP', descripcion: 'Descubre ubicación, ISP y organización de una IP.', ideal: 'Rastrear origen de visitas.' },
-                    { id: 'domain', titulo: 'Reconocimiento de Dominio', descripcion: 'Obtén IP, registros MX y otra infraestructura de un dominio.', ideal: 'OSINT de infraestructura.' },
-                    { id: 'mac', titulo: 'Buscador de Fabricante (MAC)', descripcion: 'Identifica el fabricante de un dispositivo por su MAC.', ideal: 'Análisis de redes locales.' },
-                    { id: 'email', titulo: 'Validador de Correo', descripcion: 'Verifica formato y existencia del dominio de un correo.', ideal: 'Limpieza de bases de datos.' }
-                ]
-            },
-            'utilidades': {
-                titulo: 'Utilidades y Análisis',
-                icono: '🧰',
-                descripcion: 'Conversión, criptografía y análisis de datos.',
-                items: [
-                    { id: 'exif', titulo: 'Analizador EXIF', descripcion: 'Extrae metadatos ocultos de una foto: fecha, cámara, GPS.', ideal: 'Saber si una foto revela tu ubicación.' },
-                    { id: 'pass', titulo: 'Generador de Contraseñas', descripcion: 'Crea contraseñas aleatorias y seguras.', ideal: 'Proteger tus cuentas.' },
-                    { id: 'pass-strength', titulo: 'Auditor de Contraseñas', descripcion: 'Estima cuánto tardaría un atacante en descifrarla.', ideal: 'Mejorar tu seguridad.' },
-                    { id: 'base64', titulo: 'Codificador Base64', descripcion: 'Convierte texto plano a Base64 y viceversa.', ideal: 'Depurar peticiones web.' },
-                    { id: 'jwt', titulo: 'Inspector de JWT', descripcion: 'Decodifica un token JWT sin clave secreta.', ideal: 'Entender autenticación moderna.' },
-                    { id: 'json', titulo: 'Formateador JSON', descripcion: 'Formatea y valida texto JSON.', ideal: 'Análisis de APIs y logs.' },
-                    { id: 'regex', titulo: 'Probador de Regex', descripcion: 'Prueba patrones de expresión regular en tiempo real.', ideal: 'Programación y filtrado.' },
-                    { id: 'timestamp', titulo: 'Conversor de Timestamp', descripcion: 'Convierte fechas a Unix y viceversa.', ideal: 'Análisis forense y logs.' },
-                    { id: 'uuid', titulo: 'Generador de UUID', descripcion: 'Genera identificadores únicos v4.', ideal: 'Pruebas de APIs.' }
-                ]
-            },
-            'redes': {
-                titulo: 'Redes y Comunicaciones',
-                icono: '🌐',
-                descripcion: 'Analiza la seguridad de tu conexión y protocolos.',
-                items: [
-                    { id: 'wifi', titulo: 'Analizador de Red Wi-Fi', descripcion: 'Analiza calidad y seguridad de tu conexión Wi-Fi.', ideal: 'Saber si tu red es segura.' },
-                    { id: 'dns', titulo: 'Fuga de DNS', descripcion: 'Comprueba si tu VPN filtra tu tráfico real.', ideal: 'Verificar privacidad de VPN.' },
-                    { id: 'robots', titulo: 'Analizador de Robots.txt', descripcion: 'Descubre qué oculta un sitio a los buscadores.', ideal: 'Reconocimiento web.' },
-                    { id: 'ua', titulo: 'Analizador User-Agent', descripcion: 'Descubre el sistema operativo y navegador que usas.', ideal: 'Pruebas de compatibilidad.' }
-                ]
-            },
-            'iot': {
-                titulo: 'IoT y Hardware',
-                icono: '🔌',
-                descripcion: 'Análisis de dispositivos conectados.',
-                items: [
-                    { id: 'iot-scan', titulo: 'Escáner de Dispositivos IoT', descripcion: 'Busca dispositivos conectados a tu red local.', ideal: 'Descubrir dispositivos en tu red.' },
-                    { id: 'firmware', titulo: 'Analizador de Firmware', descripcion: 'Extrae cadenas de texto de un firmware.', ideal: 'Análisis de seguridad de dispositivos.' }
-                ]
-            }
-        }
-    },
-    recursos: {
-        titulo: 'Directorio de Recursos',
-        icono: '📖',
-        descripcion: 'Enlaces seleccionados a formación, bibliografía, laboratorios y referentes.',
-        categorias: {
-            'formacion':     { titulo: 'Formación y Certificaciones', icono: '🎓', descripcion: 'Cursos, plataformas y certificaciones para iniciarte o especializarte.' },
-            'red-team-rec':  { titulo: 'Red Team & Pentesting',       icono: '⚔️', descripcion: 'Herramientas y documentación para pruebas de penetración.' },
-            'blue-team-rec': { titulo: 'Blue Team & Forense',         icono: '🛡️', descripcion: 'Defensa, análisis forense y respuesta a incidentes.' },
-            'osint-rec':     { titulo: 'OSINT e Inteligencia',        icono: '🕵️', descripcion: 'Inteligencia de fuentes abiertas para investigar.' },
-            'desarrollo':    { titulo: 'Desarrollo Seguro y APIs',    icono: '💻', descripcion: 'Seguridad en aplicaciones web, APIs y bases de datos.' },
-            'sistemas':      { titulo: 'Sistemas Operativos',         icono: '🐧', descripcion: 'Distribuciones Linux y entornos de seguridad.' },
-            'comunidad':     { titulo: 'Comunidad y Noticias',        icono: '📰', descripcion: 'Blogs, foros y medios de referencia en ciberseguridad hispana.' },
-            'referentes':    { titulo: 'Referentes Hispanos',         icono: '⭐', descripcion: 'Profesionales destacados de la ciberseguridad en español.' },
-            'bibliografia':  { titulo: 'Bibliografía en Español',     icono: '📚', descripcion: 'Libros imprescindibles de 0xWord y otros autores.' }
-        }
-    }
-};
-
 let usuarioLogueado = null;
 let temp2FAMetodo = null;
 
 function inicializarTema() {
-    const guardado = localStorage.getItem('tema');
-    const btn = document.getElementById('theme-toggle');
-    if (guardado === 'light') document.body.classList.add('light-mode');
-    if (!btn) return;
-    btn.innerText = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const light = document.body.classList.contains('light-mode');
-        localStorage.setItem('tema', light ? 'light' : 'dark');
-        btn.innerText = light ? '☀️' : '🌙';
-    });
+    const temaGuardado = localStorage.getItem('tema');
+    const body = document.body;
+    const btnToggle = document.getElementById('theme-toggle');
+    if (temaGuardado === 'light') body.classList.add('light-mode');
+    if (btnToggle) {
+        btnToggle.innerText = body.classList.contains('light-mode') ? '☀️' : '🌙';
+        btnToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('tema', 'light');
+                btnToggle.innerText = '☀️';
+            } else {
+                localStorage.setItem('tema', 'dark');
+                btnToggle.innerText = '🌙';
+            }
+        });
+    }
 }
-
-function renderHeader(activeKey = '') {
-    const header = document.querySelector('header');
-    if (!header) return;
-    const items = NAV_ITEMS.filter(i => !i.requiresAuth || usuarioLogueado);
-    header.innerHTML = `
-        <button class="logo-container" onclick="window.location.href='index.html'">
-            <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
-            <div class="logo-text">eLDeSiempre<span>.es</span></div>
-        </button>
-        <nav>
-            ${items.map(i => `<button class="nav-btn ${i.key === activeKey ? 'active' : ''}" onclick="window.location.href='${i.href}'">${i.label}</button>`).join('')}
-            ${usuarioLogueado
-                ? `<button class="nav-btn" style="color:var(--danger);border-color:var(--danger);" onclick="cerrarSesion()">Salir</button>`
-                : `<button class="nav-btn btn-login" onclick="window.location.href='login.html'">Acceder</button>`}
-            <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">🌙</button>
-        </nav>
-    `;
-    inicializarTema();
-}
-
-function mostrarToast(mensaje, tipo = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-    const toast = document.createElement('div');
-    toast.className = 'toast ' + tipo;
-    toast.innerText = mensaje;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 4000);
-}
-
-function abrirModal(id) { document.getElementById(id)?.classList.add('active'); }
-function cerrarModal(id) { document.getElementById(id)?.classList.remove('active'); }
-function mostrarAvisoLegal(e) { e?.preventDefault(); abrirModal('modal-legal'); }
 
 function comprobarDisclaimer() {
     const modal = document.getElementById('disclaimer-modal');
@@ -350,7 +29,8 @@ function comprobarDisclaimer() {
         modal.style.display = 'none';
         document.body.classList.remove('locked');
         if (!localStorage.getItem('cookiesAceptadas')) {
-            document.getElementById('cookie-banner')?.style.setProperty('display', 'flex');
+            const banner = document.getElementById('cookie-banner');
+            if(banner) banner.style.display = 'flex';
         }
     } else {
         modal.style.display = 'flex';
@@ -358,18 +38,35 @@ function comprobarDisclaimer() {
     }
 }
 
+function abrirModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.add('active'); }
+function cerrarModal(id) { const modal = document.getElementById(id); if(modal) modal.classList.remove('active'); }
+function mostrarAvisoLegal(e) { if (e) e.preventDefault(); abrirModal('modal-legal'); }
+
+function mostrarToast(mensaje, tipo = 'success') {
+    const container = document.getElementById('toast-container');
+    if(!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + tipo;
+    toast.innerText = mensaje;
+    container.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 4000);
+}
+
 function aceptarDisclaimer() {
-    document.getElementById('disclaimer-modal')?.style.setProperty('display', 'none');
+    const modal = document.getElementById('disclaimer-modal');
+    if(modal) modal.style.display = 'none';
     document.body.classList.remove('locked');
     localStorage.setItem('disclaimerAceptado', 'true');
     if (!localStorage.getItem('cookiesAceptadas')) {
-        document.getElementById('cookie-banner')?.style.setProperty('display', 'flex');
+        const banner = document.getElementById('cookie-banner');
+        if(banner) banner.style.display = 'flex';
     }
 }
 
 function aceptarCookies(aceptadas) {
     localStorage.setItem('cookiesAceptadas', aceptadas ? 'true' : 'false');
-    document.getElementById('cookie-banner')?.style.setProperty('display', 'none');
+    const banner = document.getElementById('cookie-banner');
+    if(banner) banner.style.display = 'none';
     if (!aceptadas && typeof _paq !== 'undefined') {
         _paq.push(['disableCookies']);
         _paq.push(['forgetUser']);
@@ -378,66 +75,73 @@ function aceptarCookies(aceptadas) {
 
 function copiarAlPortapapeles(texto, moneda) {
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(texto)
-            .then(() => mostrarToast(`Dirección de ${moneda} copiada`, 'success'))
-            .catch(() => mostrarToast('No se pudo copiar.', 'error'));
-        return;
+        navigator.clipboard.writeText(texto).then(() => mostrarToast('Dirección de ' + moneda + ' copiada', 'success')).catch(err => mostrarToast('No se pudo copiar.', 'error'));
+    } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = texto;
+        textArea.style.position = "fixed"; textArea.style.left = "-999999px";
+        document.body.appendChild(textArea); textArea.focus(); textArea.select();
+        try { document.execCommand('copy'); mostrarToast('Copiado', 'success'); } 
+        catch (err) { mostrarToast('Error al copiar', 'error'); }
+        textArea.remove();
     }
-    const ta = document.createElement('textarea');
-    ta.value = texto;
-    ta.style.position = 'fixed';
-    ta.style.left = '-999999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); mostrarToast('Copiado', 'success'); }
-    catch { mostrarToast('Error al copiar', 'error'); }
-    ta.remove();
 }
 
-function logHerramienta(herramienta, accion, input = '', output = '') {
+function logHerramienta(herramienta, accion, input = "", output = "") {
     fetch(`${API_URL}/herramientas.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ herramienta, accion, input, output }),
         credentials: 'include'
-    }).catch(err => console.warn('logHerramienta falló:', err));
-}
-
-async function comprobarSesion() {
-    try {
-        const res = await fetch(`${API_URL}/comprobar_sesion.php`, { credentials: 'include' });
-        const result = await res.json();
-        if (result.logueado) usuarioLogueado = result;
-    } catch {}
-}
-
-async function cerrarSesion() {
-    try { await fetch(`${API_URL}/logout.php`, { credentials: 'include' }); } catch {}
-    window.location.href = 'index.html';
+    }).catch(err => console.log("Error log"));
 }
 
 function comprobarAcceso(url) {
     if (usuarioLogueado) window.location.href = url;
     else {
-        mostrarToast('Debes iniciar sesión para acceder.', 'error');
+        mostrarToast("Debes iniciar sesión para acceder.", "error");
         setTimeout(() => window.location.href = 'login.html', 1500);
     }
 }
 
+async function comprobarSesion() {
+    try {
+        const response = await fetch(`${API_URL}/comprobar_sesion.php`, { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+        if (result.logueado) {
+            usuarioLogueado = result;
+            const btnLogin = document.getElementById('nav-login-btn');
+            const btnLogout = document.getElementById('nav-logout-btn');
+            const btnPerfil = document.getElementById('nav-perfil-btn');
+            if(btnLogin) btnLogin.style.display = 'none';
+            if(btnLogout) btnLogout.style.display = 'block';
+            if(btnPerfil) btnPerfil.style.display = 'block';
+        }
+    } catch (error) {}
+}
+
+async function cerrarSesion() { 
+    try { await fetch(`${API_URL}/logout.php`, { credentials: 'include' }); } catch (error) {}
+    window.location.href = 'index.html';
+}
+
 function protegerContenidoPrivado() {
     const path = window.location.pathname;
-    if (!['biblioteca.html', 'perfil.html'].some(p => path.includes(p))) return;
-    if (window.location.search.includes('cat=')) return;
-    const main = document.querySelector('main.container');
-    if (!main) return;
-    main.style.display = 'none';
-    setTimeout(() => {
-        if (usuarioLogueado) main.style.display = 'block';
-        else {
-            mostrarToast('Acceso denegado.', 'error');
-            setTimeout(() => window.location.href = 'login.html', 1000);
+    if (path.includes('biblioteca.html') || path.includes('perfil.html')) {
+        const mainContent = document.querySelector('main.container');
+        if (mainContent && !window.location.search.includes('cat=')) { 
+            mainContent.style.display = 'none';
+            setTimeout(() => {
+                if (usuarioLogueado) mainContent.style.display = 'block';
+                else {
+                    mostrarToast("Acceso denegado.", "error");
+                    setTimeout(() => window.location.href = 'login.html', 1000);
+                }
+            }, 500);
+        } else if (mainContent) {
+             mainContent.style.display = 'block';
         }
-    }, 300);
+    }
 }
 
 function getBadgeClass(tipo) {
@@ -448,340 +152,38 @@ function getBadgeClass(tipo) {
     if (t.includes('libro')) return 'badge-libro';
     if (t.includes('hacker')) return 'badge-hacker';
     if (t.includes('sistema')) return 'badge-sistema';
-    if (t.includes('noticia') || t.includes('comunidad') || t.includes('blog')) return 'badge-noticia';
+    if (t.includes('noticia') || t.includes('comunidad')) return 'badge-noticia';
     if (t.includes('documentación')) return 'badge-doc';
     if (t.includes('laboratorio')) return 'badge-lab';
     return 'badge-default';
 }
 
 async function votarRecurso(id, btn) {
-    if (!usuarioLogueado) {
-        mostrarToast('Inicia sesión para votar.', 'error');
-        setTimeout(() => window.location.href = 'login.html', 1200);
-        return;
-    }
+    if(!usuarioLogueado) { mostrarToast("Inicia sesión para votar.", "error"); return; }
     try {
-        const res = await fetch(`${API_URL}/votar.php`, {
+        const response = await fetch(`${API_URL}/votar.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ recurso_id: id }),
             credentials: 'include'
         });
-        const result = await res.json();
+        const result = await response.json();
         if (result.success) {
-            btn.classList.toggle('votado', result.votado);
-            btn.querySelector('span').innerText = result.votos;
+            btn.classList.toggle('votado');
+            const span = btn.querySelector('span');
+            span.innerText = result.votos;
         } else {
-            mostrarToast(result.message || 'No se pudo votar.', 'error');
+            mostrarToast(result.message, "error");
         }
-    } catch (err) {
-        console.error('Error al votar:', err);
-        mostrarToast('Error al votar.', 'error');
-    }
+    } catch (error) { mostrarToast("Error al votar.", "error"); }
 }
 
-function breadcrumb(items) {
-    return `<nav class="breadcrumb">${items.map((it, i) =>
-        i === items.length - 1
-            ? `<span>${it.label}</span>`
-            : `<a href="${it.href}">${it.label}</a> / `
-    ).join('')}</nav>`;
-}
-
-async function cargarBiblioteca() {
-    const contenedor = document.getElementById('contenedor-biblioteca');
-    if (!contenedor) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const seccion = params.get('seccion');
-    const categoria = params.get('cat');
-
-    if (!seccion) return renderIndiceBiblioteca(contenedor);
-    if (!SECCIONES_BIBLIOTECA[seccion]) {
-        contenedor.innerHTML = '<p>Sección no encontrada.</p>';
-        return;
-    }
-    if (!categoria) return renderCategoriasSeccion(contenedor, seccion);
-    return renderDetalleCategoria(contenedor, seccion, categoria);
-}
-
-function renderIndiceBiblioteca(contenedor) {
-    const cards = Object.entries(SECCIONES_BIBLIOTECA).map(([slug, s]) => `
-        <a href="biblioteca.html?seccion=${slug}" class="folder" style="border-color: var(--neon-blue);">
-            <div class="folder-icon" style="font-size: 3rem;">${s.icono}</div>
-            <h3>${s.titulo}</h3>
-            <p>${s.descripcion}</p>
-            <span class="folder-badge">Entrar →</span>
-        </a>
-    `).join('');
-    contenedor.innerHTML = `
-        ${breadcrumb([{ label: 'Inicio', href: 'index.html' }, { label: 'Biblioteca' }])}
-        <h2>Biblioteca de Ciberseguridad</h2>
-        <p style="margin-bottom: 30px; color: var(--text-muted);">Elige qué quieres explorar hoy.</p>
-        <div class="folder-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">${cards}</div>
-    `;
-}
-
-function renderCategoriasSeccion(contenedor, seccion) {
-    const data = SECCIONES_BIBLIOTECA[seccion];
-    const cards = Object.entries(data.categorias).map(([slug, c]) => {
-        const count = c.items ? c.items.length : null;
-        return `
-            <a href="biblioteca.html?seccion=${seccion}&cat=${slug}" class="folder">
-                <div class="folder-icon">${c.icono}</div>
-                <h3>${c.titulo}</h3>
-                <p>${c.descripcion}</p>
-                ${count ? `<span class="folder-badge">${count} herramientas</span>` : ''}
-            </a>
-        `;
-    }).join('');
-    contenedor.innerHTML = `
-        ${breadcrumb([
-            { label: 'Inicio', href: 'index.html' },
-            { label: 'Biblioteca', href: 'biblioteca.html' },
-            { label: data.titulo }
-        ])}
-        <h2>${data.icono} ${data.titulo}</h2>
-        <p style="margin-bottom: 20px; color: var(--text-muted);">${data.descripcion}</p>
-        <div class="folder-grid">${cards}</div>
-    `;
-}
-
-async function renderDetalleCategoria(contenedor, seccion, categoria) {
-    const data = SECCIONES_BIBLIOTECA[seccion].categorias[categoria];
-    if (!data) {
-        contenedor.innerHTML = '<p>Categoría no encontrada.</p>';
-        return;
-    }
-    if (seccion === 'herramientas') return renderHerramientas(contenedor, data, categoria);
-
-    try {
-        const res = await fetch(`${API_URL}/obtener_recursos.php`, { credentials: 'include' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const result = await res.json();
-        if (!result.success) throw new Error(result.message || 'API error');
-
-        const recursos = result.data.find(c => c.slug === categoria)?.recursos ?? [];
-
-        const items = recursos.map(r => {
-            const badge = r.tipo ? `<span class="badge ${getBadgeClass(r.tipo)}">${r.tipo}</span>` : '';
-            const votado = result.votos.includes(Number(r.id)) ? 'votado' : '';
-            const botonVoto = usuarioLogueado
-                ? `<button class="btn-voto ${votado}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>`
-                : `<a href="login.html" class="btn-voto" style="text-decoration:none;">⭐ <span>${r.votos || 0}</span></a>`;
-            return `
-                <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
-                    <div class="resource-header">
-                        <span class="resource-title">${r.titulo}</span>
-                        ${badge}
-                    </div>
-                    <div class="resource-desc">${r.descripcion}</div>
-                    <div class="resource-meta">
-                        <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
-                    </div>
-                    <div class="resource-actions">
-                        <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
-                        ${botonVoto}
-                    </div>
-                </li>
-            `;
-        }).join('');
-
-        contenedor.innerHTML = `
-            ${breadcrumb([
-                { label: 'Inicio', href: 'index.html' },
-                { label: 'Biblioteca', href: 'biblioteca.html' },
-                { label: SECCIONES_BIBLIOTECA[seccion].titulo, href: `biblioteca.html?seccion=${seccion}` },
-                { label: data.titulo }
-            ])}
-            <div class="category-header">
-                <h2>${data.icono} ${data.titulo}</h2>
-                <p>${data.descripcion}</p>
-                <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
-            </div>
-            <ul class="resource-list" id="lista-recursos">
-                ${items || `<li style="text-align:center;padding:20px;color:var(--text-muted);">No hay recursos en esta categoría todavía.</li>`}
-            </ul>
-        `;
-    } catch (err) {
-        console.error('Error cargando recursos:', err);
-        contenedor.innerHTML = `
-            <p style="color: var(--danger);">Error al cargar los recursos.</p>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 10px;">
-                Comprueba que has iniciado sesión y que el servidor responde.
-            </p>
-        `;
-    }
-}
-
-function renderHerramientas(contenedor, data, categoria) {
-    const items = data.items.map(h => `
-        <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
-            <h3>${h.titulo}</h3>
-            <p>${h.descripcion}</p>
-            <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
-        </div>
-    `).join('');
-
-    contenedor.innerHTML = `
-        ${breadcrumb([
-            { label: 'Inicio', href: 'index.html' },
-            { label: 'Biblioteca', href: 'biblioteca.html' },
-            { label: 'Herramientas', href: 'biblioteca.html?seccion=herramientas' },
-            { label: data.titulo }
-        ])}
-        <div class="category-header">
-            <h2>${data.icono} ${data.titulo}</h2>
-            <p>${data.descripcion}</p>
-            <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
-        </div>
-        <div class="grid-cards" id="lista-herramientas">${items}</div>
-    `;
-}
-
-function filtrarHerramientas() {
-    const q = document.getElementById('buscador-herramientas').value.toLowerCase();
-    document.querySelectorAll('#lista-herramientas .card').forEach(el => {
-        el.style.display = el.dataset.titulo.includes(q) ? 'flex' : 'none';
-    });
-}
-
-function filtrarRecursos() {
-    const q = document.getElementById('buscador-recursos').value.toLowerCase();
-    document.querySelectorAll('#lista-recursos .resource-item').forEach(el => {
-        el.style.display = el.dataset.titulo.includes(q) ? 'flex' : 'none';
-    });
-}
-
-function toggleAuthForms(e) {
-    e?.preventDefault();
-    const login = document.getElementById('form-login');
-    const reg = document.getElementById('form-registro');
-    if (!login || !reg) return;
-    const showLogin = login.style.display === 'none';
-    login.style.display = showLogin ? 'block' : 'none';
-    reg.style.display = showLogin ? 'none' : 'block';
-}
-
-async function cargarPerfil() {
-    if (!usuarioLogueado) return;
-    const set = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
-    set('perfil-usuario', usuarioLogueado.usuario);
-    set('perfil-nombre', usuarioLogueado.nombre);
-
-    try {
-        const res = await fetch(`${API_URL}/obtener_perfil.php`, { credentials: 'include' });
-        const result = await res.json();
-        if (!result.success) return;
-
-        const bio = document.getElementById('perfil-bio');
-        const hab = document.getElementById('perfil-habilidades');
-        const git = document.getElementById('perfil-github');
-        if (bio) bio.value = result.data.bio || '';
-        if (hab) hab.value = result.data.habilidades || '';
-        if (git) git.value = result.data.github || '';
-
-        ['email', 'totp'].forEach(tipo => {
-            const btn = document.getElementById(`btn-2fa-${tipo}`);
-            if (!btn) return;
-            if (result.data[`twofa_${tipo}_activo`]) {
-                btn.innerText = 'Contactar Soporte';
-                btn.onclick = () => window.location.href = 'contacto.html';
-            }
-        });
-    } catch {}
-}
-
-async function solicitarReset(email = null) {
-    if (!email) {
-        email = prompt('Confirma tu correo electrónico:');
-        if (!email) return;
-    }
-    try {
-        const res = await fetch(`${API_URL}/solicitar_reset.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const result = await res.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success && document.getElementById('modal-forgot')) {
-            cerrarModal('modal-forgot');
-        }
-    } catch { mostrarToast('Error de conexión.', 'error'); }
-}
-
-async function enviarReset() {
-    const email = document.getElementById('forgot-email')?.value;
-    if (!email) { mostrarToast('Introduce tu correo.', 'error'); return; }
-    await solicitarReset(email);
-}
-
-async function toggle2FAEmail() {
-    try {
-        const res = await fetch(`${API_URL}/activar_2fa_email.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ activo: true }),
-            credentials: 'include'
-        });
-        const result = await res.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) {
-            const btn = document.getElementById('btn-2fa-email');
-            btn.innerText = 'Contactar Soporte';
-            btn.onclick = () => window.location.href = 'contacto.html';
-        }
-    } catch { mostrarToast('Error de conexión.', 'error'); }
-}
-
-async function iniciar2FATOTP() {
-    try {
-        const res = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
-        const result = await res.json();
-        if (result.success) {
-            document.getElementById('qr-container').innerHTML =
-                `<img src="${result.qr_svg}" alt="QR" style="width:100%;max-width:200px;">`;
-            document.getElementById('secret-text').innerText = result.secret;
-            abrirModal('modal-totp');
-        } else mostrarToast(result.message, 'error');
-    } catch { mostrarToast('Error al generar QR.', 'error'); }
-}
-
-async function confirmar2FATOTP() {
-    const codigo = document.getElementById('totp-codigo')?.value;
-    try {
-        const res = await fetch(`${API_URL}/confirmar_2fa_totp.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo }),
-            credentials: 'include'
-        });
-        const result = await res.json();
-        mostrarToast(result.message, result.success ? 'success' : 'error');
-        if (result.success) {
-            cerrarModal('modal-totp');
-            const btn = document.getElementById('btn-2fa-totp');
-            btn.innerText = 'Contactar Soporte';
-            btn.onclick = () => window.location.href = 'contacto.html';
-        }
-    } catch { mostrarToast('Error', 'error'); }
-}
-
-document.getElementById('form-login')?.addEventListener('submit', async e => {
+document.getElementById('form-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = {
-        correo: document.getElementById('login-correo').value,
-        contrasena: document.getElementById('login-contrasena').value
-    };
+    const data = { correo: document.getElementById('login-correo').value, contrasena: document.getElementById('login-contrasena').value };
     try {
-        const res = await fetch(`${API_URL}/login.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-            credentials: 'include'
-        });
-        const result = await res.json();
+        const response = await fetch(`${API_URL}/login.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
+        const result = await response.json();
         if (result.success) {
             if (result.requiere_2fa) {
                 temp2FAMetodo = result.requiere_2fa;
@@ -791,762 +193,607 @@ document.getElementById('form-login')?.addEventListener('submit', async e => {
                 mostrarToast('Bienvenido ' + result.nombre, 'success');
                 setTimeout(() => window.location.href = 'biblioteca.html', 1000);
             }
-        } else mostrarToast('Error: ' + result.message, 'error');
-    } catch { mostrarToast('Error de conexión.', 'error'); }
+        } else { mostrarToast('Error: ' + result.message, 'error'); }
+    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
 });
 
 async function verificar2FALogin() {
-    const codigo = document.getElementById('2fa-codigo')?.value;
-    if (!codigo) { mostrarToast('Introduce el código.', 'error'); return; }
+    const codigo = document.getElementById('2fa-codigo').value;
+    if (!codigo) { mostrarToast("Introduce el código.", "error"); return; }
     try {
-        const res = await fetch(`${API_URL}/verificar_2fa_login.php`, {
+        const response = await fetch(`${API_URL}/verificar_2fa_login.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo, metodo: temp2FAMetodo }),
+            body: JSON.stringify({ codigo: codigo, metodo: temp2FAMetodo }),
             credentials: 'include'
         });
-        const result = await res.json();
+        const result = await response.json();
         if (result.success) {
             mostrarToast('Login exitoso.', 'success');
             setTimeout(() => window.location.href = 'biblioteca.html', 1000);
-        } else mostrarToast(result.message, 'error');
-    } catch { mostrarToast('Error de conexión.', 'error'); }
+        } else {
+            mostrarToast(result.message, 'error');
+        }
+    } catch (error) { mostrarToast("Error de conexión.", "error"); }
 }
 
-document.getElementById('form-registro')?.addEventListener('submit', async e => {
+document.getElementById('form-registro')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = {
-        nombre_completo: document.getElementById('reg-nombre').value,
-        usuario: document.getElementById('reg-usuario').value,
-        correo: document.getElementById('reg-correo').value,
-        contrasena: document.getElementById('reg-contrasena').value
-    };
+    const data = { nombre_completo: document.getElementById('reg-nombre').value, usuario: document.getElementById('reg-usuario').value, correo: document.getElementById('reg-correo').value, contrasena: document.getElementById('reg-contrasena').value };
     try {
-        const res = await fetch(`${API_URL}/registro.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-            credentials: 'include'
-        });
-        const result = await res.json();
+        const response = await fetch(`${API_URL}/registro.php`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(data), credentials: 'include' });
+        const result = await response.json();
         if (result.success) {
             mostrarToast('Registro exitoso.', 'success');
             document.getElementById('form-registro').reset();
-            toggleAuthForms();
-        } else mostrarToast('Error: ' + result.message, 'error');
-    } catch { mostrarToast('Error de conexión.', 'error'); }
+            document.getElementById('form-login').style.display = 'block';
+            document.getElementById('form-registro').style.display = 'none';
+        } else { mostrarToast('Error: ' + result.message, 'error'); }
+    } catch (error) { mostrarToast('Error de conexión.', 'error'); }
 });
 
-document.getElementById('form-perfil')?.addEventListener('submit', async e => {
-    e.preventDefault();
-    const data = {
-        bio: document.getElementById('perfil-bio').value,
-        habilidades: document.getElementById('perfil-habilidades').value,
-        github: document.getElementById('perfil-github').value
-    };
+function toggleAuthForms(event) {
+    if(event) event.preventDefault();
+    const formLogin = document.getElementById('form-login');
+    const formRegistro = document.getElementById('form-registro');
+    if (formLogin.style.display === 'none') { formLogin.style.display = 'block'; formRegistro.style.display = 'none'; } 
+    else { formLogin.style.display = 'none'; formRegistro.style.display = 'block'; }
+}
+
+async function cargarPerfil() {
+    const userSpan = document.getElementById('perfil-usuario');
+    const nameSpan = document.getElementById('perfil-nombre');
+    const bioInput = document.getElementById('perfil-bio');
+    const habInput = document.getElementById('perfil-habilidades');
+    const gitInput = document.getElementById('perfil-github');
+    const btn2FAEmail = document.getElementById('btn-2fa-email');
+    const btn2FATOTP = document.getElementById('btn-2fa-totp');
+
+    if (!userSpan || !usuarioLogueado) return;
+    userSpan.innerText = usuarioLogueado.usuario;
+    nameSpan.innerText = usuarioLogueado.nombre;
+    
     try {
-        const res = await fetch(`${API_URL}/actualizar_perfil.php`, {
+        const response = await fetch(`${API_URL}/obtener_perfil.php`, { method: 'GET', credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            if(bioInput) bioInput.value = result.data.bio || '';
+            if(habInput) habInput.value = result.data.habilidades || '';
+            if(gitInput) gitInput.value = result.data.github || '';
+            
+            if (btn2FAEmail) {
+                if (result.data.twofa_email_activo) {
+                    btn2FAEmail.innerText = 'Contactar Soporte';
+                    btn2FAEmail.onclick = () => window.location.href = 'contacto.html';
+                } else {
+                    btn2FAEmail.innerText = 'Activar';
+                    btn2FAEmail.onclick = toggle2FAEmail;
+                }
+            }
+
+            if (btn2FATOTP && result.data.twofa_totp_activo) {
+                btn2FATOTP.innerText = 'Contactar Soporte';
+                btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
+            }
+        }
+    } catch(e) {}
+}
+
+document.getElementById('form-perfil')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const bio = document.getElementById('perfil-bio').value;
+    const habilidades = document.getElementById('perfil-habilidades').value;
+    const github = document.getElementById('perfil-github').value;
+    try {
+        const response = await fetch(`${API_URL}/actualizar_perfil.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify({ bio, habilidades, github }),
             credentials: 'include'
         });
-        const result = await res.json();
-        mostrarToast(result.success ? 'Perfil actualizado.' : 'Error al actualizar.', result.success ? 'success' : 'error');
-    } catch { mostrarToast('Error de conexión.', 'error'); }
+        const result = await response.json();
+        if(result.success) mostrarToast('Perfil actualizado.', 'success');
+        else mostrarToast('Error al actualizar.', 'error');
+    } catch(e) { mostrarToast('Error de conexión.', 'error'); }
 });
 
-function generarDork() {
-    const dominio = document.getElementById('dork-input').value.trim();
-    const tipo = document.getElementById('dork-type').value;
-    const extra = document.getElementById('dork-extra').value;
-    if (!dominio) { mostrarToast('Introduce un dominio.', 'error'); return; }
-    let dork = `site:${dominio} filetype:${tipo}`;
-    if (extra) dork += ` ${extra}`;
-    document.getElementById('dork-result').innerText = dork;
-    logHerramienta('Generador de Dorks', 'Generar', dominio, dork);
-}
-
-function limpiarDorks() {
-    document.getElementById('dork-input').value = '';
-    document.getElementById('dork-result').innerText = '';
-}
-
-document.getElementById('exif-input')?.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const result = document.getElementById('exif-result');
-    result.innerHTML = 'Leyendo metadatos...';
-    EXIF.getData(file, function() {
-        const tags = EXIF.getAllTags(this);
-        if (Object.keys(tags).length === 0) {
-            result.innerHTML = 'No se encontraron metadatos EXIF.';
-            return;
-        }
-        let html = '<ul style="list-style:none;padding:0;">';
-        for (const [k, v] of Object.entries(tags)) {
-            html += `<li><strong>${k}:</strong> ${v}</li>`;
-        }
-        html += '</ul>';
-        result.innerHTML = html;
-        logHerramienta('Analizador EXIF', 'Analizar', file.name, 'metadatos extraídos');
-    });
-});
-
-function generarPassword() {
-    const mayus = document.getElementById('chk-mayus').checked;
-    const minus = document.getElementById('chk-minus').checked;
-    const nums = document.getElementById('chk-nums').checked;
-    const syms = document.getElementById('chk-symbols').checked;
-    const longitud = parseInt(document.getElementById('slider-longitud').value, 10);
-
-    let chars = '';
-    if (mayus) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if (minus) chars += 'abcdefghijklmnopqrstuvwxyz';
-    if (nums) chars += '0123456789';
-    if (syms) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-
-    if (!chars) { mostrarToast('Selecciona al menos un tipo de carácter.', 'error'); return; }
-
-    let pass = '';
-    const arr = new Uint32Array(longitud);
-    crypto.getRandomValues(arr);
-    for (let i = 0; i < longitud; i++) pass += chars[arr[i] % chars.length];
-
-    document.getElementById('resultado-password').innerText = pass;
-    logHerramienta('Generador de Contraseñas', 'Generar', longitud + ' chars', pass);
-}
-
-function limpiarPassword() {
-    document.getElementById('resultado-password').innerText = '';
-}
-
-function analizarHash() {
-    const hash = document.getElementById('input-hash').value.trim();
-    const result = document.getElementById('resultado-hash');
-    if (!hash) { result.innerText = 'Introduce un hash.'; return; }
-    let tipo = 'Desconocido';
-    if (/^[a-f0-9]{32}$/i.test(hash)) tipo = 'MD5';
-    else if (/^[a-f0-9]{40}$/i.test(hash)) tipo = 'SHA-1';
-    else if (/^[a-f0-9]{64}$/i.test(hash)) tipo = 'SHA-256';
-    else if (/^[a-f0-9]{128}$/i.test(hash)) tipo = 'SHA-512';
-    else if (/^\$2[ayb]\$.{56}$/.test(hash)) tipo = 'Bcrypt';
-    result.innerText = `Algoritmo probable: ${tipo}`;
-    logHerramienta('Analizador de Hash', 'Analizar', hash.substring(0, 20), tipo);
-}
-
-function limpiarHash() {
-    document.getElementById('input-hash').value = '';
-    document.getElementById('resultado-hash').innerText = '';
-}
-
-async function buscarIP() {
-    const ip = document.getElementById('ip-input').value.trim();
-    const result = document.getElementById('resultado-ip');
-    if (!ip) { result.innerText = 'Introduce una IP.'; return; }
-    result.innerText = 'Consultando...';
+async function solicitarReset() {
+    const email = prompt("Confirma tu correo electrónico para recibir el enlace:");
+    if (!email) return;
     try {
-        const res = await fetch(`https://ipwho.is/${ip}`);
-        const data = await res.json();
-        if (!data.success) { result.innerText = 'No se encontró información.'; return; }
-        result.innerHTML = `
-            <p><strong>IP:</strong> ${data.ip}</p>
-            <p><strong>País:</strong> ${data.country} (${data.country_code})</p>
-            <p><strong>Región:</strong> ${data.region}</p>
-            <p><strong>Ciudad:</strong> ${data.city}</p>
-            <p><strong>ISP:</strong> ${data.connection?.isp || 'N/A'}</p>
-            <p><strong>Organización:</strong> ${data.connection?.org || 'N/A'}</p>
-            <p><strong>Zona horaria:</strong> ${data.timezone?.id || 'N/A'}</p>
-        `;
-        logHerramienta('Buscador de IP', 'Consultar', ip, data.country);
-    } catch {
-        result.innerText = 'Error de conexión.';
-    }
-}
-
-function limpiarIP() {
-    document.getElementById('ip-input').value = '';
-    document.getElementById('resultado-ip').innerHTML = '';
-}
-
-function procesarBase64(accion) {
-    const input = document.getElementById('base64-input').value;
-    const result = document.getElementById('base64-result');
-    if (!input) { result.innerText = 'Introduce texto.'; return; }
-    try {
-        if (accion === 'codificar') {
-            result.innerText = btoa(unescape(encodeURIComponent(input)));
-        } else {
-            result.innerText = decodeURIComponent(escape(atob(input)));
-        }
-        logHerramienta('Codificador Base64', accion, input.substring(0, 30), 'ok');
-    } catch {
-        result.innerText = 'Error al procesar.';
-    }
-}
-
-function analizarJWT() {
-    const token = document.getElementById('jwt-input').value.trim();
-    const result = document.getElementById('jwt-result');
-    if (!token) { result.innerText = 'Introduce un token.'; return; }
-    const partes = token.split('.');
-    if (partes.length !== 3) { result.innerText = 'JWT inválido (debe tener 3 partes).'; return; }
-    try {
-        const header = JSON.parse(atob(partes[0].replace(/-/g, '+').replace(/_/g, '/')));
-        const payload = JSON.parse(atob(partes[1].replace(/-/g, '+').replace(/_/g, '/')));
-        result.innerHTML = `
-            <p><strong>Header:</strong></p>
-            <pre>${JSON.stringify(header, null, 2)}</pre>
-            <p><strong>Payload:</strong></p>
-            <pre>${JSON.stringify(payload, null, 2)}</pre>
-        `;
-        logHerramienta('Inspector de JWT', 'Analizar', 'token', 'ok');
-    } catch {
-        result.innerText = 'Error al decodificar el JWT.';
-    }
-}
-
-function convertirFechaATimestamp() {
-    const fecha = document.getElementById('ts-date-input').value;
-    if (!fecha) return;
-    const ts = Math.floor(new Date(fecha).getTime() / 1000);
-    document.getElementById('ts-result').innerText = `Timestamp: ${ts}`;
-    logHerramienta('Conversor de Timestamp', 'Fecha a Timestamp', fecha, ts);
-}
-
-function convertirTimestampAFecha() {
-    const ts = parseInt(document.getElementById('ts-input').value, 10);
-    if (isNaN(ts)) return;
-    const fecha = new Date(ts * 1000).toISOString();
-    document.getElementById('ts-result').innerText = `Fecha: ${fecha}`;
-    logHerramienta('Conversor de Timestamp', 'Timestamp a Fecha', ts, fecha);
-}
-
-document.getElementById('modal-ua')?.addEventListener('click', () => {
-    const result = document.getElementById('ua-result');
-    if (result && !result.innerHTML) {
-        result.innerHTML = `
-            <p><strong>User-Agent:</strong> ${navigator.userAgent}</p>
-            <p><strong>Plataforma:</strong> ${navigator.platform}</p>
-            <p><strong>Idioma:</strong> ${navigator.language}</p>
-            <p><strong>Pantalla:</strong> ${screen.width}x${screen.height}</p>
-        `;
-        logHerramienta('Analizador User-Agent', 'Consultar', '', navigator.platform);
-    }
-});
-
-async function analizarHeaders() {
-    const url = document.getElementById('header-url').value.trim();
-    const result = document.getElementById('header-result');
-    if (!url) { result.innerText = 'Introduce una URL.'; return; }
-    result.innerText = 'Analizando...';
-    try {
-        const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, { method: 'HEAD' });
-        let html = '<ul>';
-        res.headers.forEach((v, k) => { html += `<li><strong>${k}:</strong> ${v}</li>`; });
-        html += '</ul>';
-        result.innerHTML = html;
-        logHerramienta('Inspector de Cabeceras HTTP', 'Analizar', url, 'ok');
-    } catch {
-        result.innerText = 'Error al analizar.';
-    }
-}
-
-function analizarSSL() {
-    const url = document.getElementById('ssl-url').value.trim();
-    const result = document.getElementById('ssl-result');
-    if (!url) { result.innerText = 'Introduce una URL.'; return; }
-    result.innerText = url.startsWith('https://') ? '✓ URL usa HTTPS.' : '✗ URL no usa HTTPS.';
-    logHerramienta('Analizador SSL/TLS', 'Analizar', url, result.innerText);
-}
-
-function generarUUID() {
-    const uuid = crypto.randomUUID();
-    document.getElementById('uuid-result').innerText = uuid;
-    logHerramienta('Generador de UUID', 'Generar', '', uuid);
-}
-
-function probarRegex() {
-    const patron = document.getElementById('regex-pattern').value;
-    const texto = document.getElementById('regex-text').value;
-    const result = document.getElementById('regex-result');
-    if (!patron) { result.innerText = ''; return; }
-    try {
-        const re = new RegExp(patron);
-        const match = re.test(texto);
-        result.innerText = match ? '✓ Coincide' : '✗ No coincide';
-        result.style.color = match ? 'var(--neon-green)' : 'var(--danger)';
-    } catch {
-        result.innerText = 'Patrón inválido.';
-    }
-}
-
-function formatearJSON() {
-    const input = document.getElementById('json-input').value;
-    const result = document.getElementById('json-result');
-    try {
-        const obj = JSON.parse(input);
-        result.innerHTML = `<pre>${JSON.stringify(obj, null, 2)}</pre>`;
-        logHerramienta('Formateador JSON', 'Formatear', input.substring(0, 30), 'ok');
-    } catch {
-        result.innerText = 'JSON inválido.';
-    }
-}
-
-async function analizarRobots() {
-    const url = document.getElementById('robots-url').value.trim();
-    const result = document.getElementById('robots-result');
-    if (!url) { result.innerText = 'Introduce una URL.'; return; }
-    result.innerText = 'Cargando...';
-    try {
-        const full = url.replace(/\/$/, '') + '/robots.txt';
-        const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(full)}`);
-        result.innerText = await res.text();
-        logHerramienta('Analizador de Robots.txt', 'Analizar', url, 'ok');
-    } catch {
-        result.innerText = 'Error al cargar robots.txt.';
-    }
-}
-
-async function analizarWifi() {
-    const result = document.getElementById('wifi-result');
-    result.innerText = 'Analizando...';
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    let html = `<p><strong>Online:</strong> ${navigator.onLine ? 'Sí' : 'No'}</p>`;
-    if (conn) {
-        html += `<p><strong>Tipo efectivo:</strong> ${conn.effectiveType || 'N/A'}</p>`;
-        html += `<p><strong>Downlink:</strong> ${conn.downlink || 'N/A'} Mbps</p>`;
-        html += `<p><strong>RTT:</strong> ${conn.rtt || 'N/A'} ms</p>`;
-    } else {
-        html += '<p>Tu navegador no soporta la API Network Information.</p>';
-    }
-    html += `<p><strong>Protocolo:</strong> ${location.protocol}</p>`;
-    result.innerHTML = html;
-    logHerramienta('Analizador de Red Wi-Fi', 'Analizar', '', 'ok');
-}
-
-async function analizarDNS() {
-    const result = document.getElementById('dns-result');
-    result.innerText = 'Comprobando...';
-    try {
-        const res = await fetch('https://dns.google/resolve?name=example.com&type=A');
-        const data = await res.json();
-        result.innerHTML = `<p><strong>DNS de Google accesible:</strong> Sí</p><p><strong>Respuesta:</strong> ${JSON.stringify(data.Answer || [])}</p>`;
-        logHerramienta('Fuga de DNS', 'Comprobar', '', 'ok');
-    } catch {
-        result.innerText = 'Error al comprobar DNS.';
-    }
-}
-
-function auditarPassword() {
-    const pass = document.getElementById('pass-audit-input').value;
-    const result = document.getElementById('pass-audit-result');
-    if (!pass) { result.innerText = ''; return; }
-    let score = 0;
-    if (pass.length >= 8) score++;
-    if (pass.length >= 12) score++;
-    if (pass.length >= 16) score++;
-    if (/[A-Z]/.test(pass)) score++;
-    if (/[a-z]/.test(pass)) score++;
-    if (/[0-9]/.test(pass)) score++;
-    if (/[^A-Za-z0-9]/.test(pass)) score++;
-
-    let nivel = 'Muy débil';
-    let color = 'var(--danger)';
-    if (score >= 6) { nivel = 'Muy fuerte'; color = 'var(--neon-green)'; }
-    else if (score >= 5) { nivel = 'Fuerte'; color = 'var(--neon-green)'; }
-    else if (score >= 4) { nivel = 'Media'; color = 'var(--neon-gold)'; }
-    else if (score >= 2) { nivel = 'Débil'; color = 'var(--neon-gold)'; }
-
-    result.innerHTML = `<p style="color:${color};"><strong>Fortaleza:</strong> ${nivel} (${score}/7)</p>`;
-    logHerramienta('Auditor de Contraseñas', 'Auditar', pass.length + ' chars', nivel);
-}
-
-async function analizarDominio() {
-    const dominio = document.getElementById('domain-input').value.trim();
-    const result = document.getElementById('domain-result');
-    if (!dominio) { result.innerText = 'Introduce un dominio.'; return; }
-    result.innerText = 'Analizando...';
-    try {
-        const res = await fetch(`https://dns.google/resolve?name=${dominio}&type=A`);
-        const data = await res.json();
-        let html = `<p><strong>Dominio:</strong> ${dominio}</p>`;
-        if (data.Answer) {
-            html += '<p><strong>Registros A:</strong></p><ul>';
-            data.Answer.forEach(a => { html += `<li>${a.data}</li>`; });
-            html += '</ul>';
-        } else {
-            html += '<p>No se encontraron registros A.</p>';
-        }
-        result.innerHTML = html;
-        logHerramienta('Reconocimiento de Dominio', 'Analizar', dominio, 'ok');
-    } catch {
-        result.innerText = 'Error al analizar.';
-    }
-}
-
-function validarEmail() {
-    const email = document.getElementById('email-input').value.trim();
-    const result = document.getElementById('email-result');
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) { result.innerText = 'Introduce un correo.'; return; }
-    if (re.test(email)) {
-        result.innerHTML = `<p style="color: var(--neon-green);">✓ Formato válido</p>`;
-    } else {
-        result.innerHTML = `<p style="color: var(--danger);">✗ Formato inválido</p>`;
-    }
-    logHerramienta('Validador de Correo', 'Validar', email, re.test(email) ? 'válido' : 'inválido');
-}
-
-async function analizarMAC() {
-    const mac = document.getElementById('mac-input').value.trim();
-    const result = document.getElementById('mac-result');
-    if (!mac) { result.innerText = 'Introduce una MAC.'; return; }
-    result.innerText = 'Buscando...';
-    try {
-        const res = await fetch(`https://api.macvendors.com/${encodeURIComponent(mac)}`);
-        if (!res.ok) throw new Error();
-        const fabricante = await res.text();
-        result.innerHTML = `<p><strong>Fabricante:</strong> ${fabricante}</p>`;
-        logHerramienta('Buscador de Fabricante (MAC)', 'Buscar', mac, fabricante);
-    } catch {
-        result.innerText = 'Fabricante no encontrado.';
-    }
-}
-
-function generarPayload() {
-    const tipo = document.getElementById('payload-tipo').value;
-    const input = document.getElementById('payload-input').value.trim();
-    const result = document.getElementById('payload-result');
-    if (!input) { result.innerText = 'Introduce un texto o URL.'; return; }
-    let payload = '';
-    if (tipo === 'xss') payload = `<script>alert('XSS')</script>`;
-    else if (tipo === 'sqli') payload = `' OR '1'='1`;
-    else if (tipo === 'lfi') payload = `../../../../etc/passwd`;
-    result.innerText = payload;
-    logHerramienta('Generador de Payloads', tipo, input, payload);
-}
-
-async function buscarCVE() {
-    const query = document.getElementById('cve-input').value.trim();
-    const result = document.getElementById('cve-result');
-    if (!query) { result.innerText = 'Introduce un término de búsqueda.'; return; }
-    result.innerText = 'Buscando...';
-    try {
-        const res = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(query)}&resultsPerPage=5`);
-        const data = await res.json();
-        if (!data.vulnerabilities || !data.vulnerabilities.length) {
-            result.innerText = 'No se encontraron CVEs.';
-            return;
-        }
-        let html = '<ul style="list-style:none;padding:0;">';
-        data.vulnerabilities.forEach(v => {
-            const cve = v.cve;
-            const desc = cve.descriptions?.find(d => d.lang === 'en')?.value || 'Sin descripción.';
-            html += `
-                <li style="margin-bottom:15px;padding:10px;border-left:3px solid var(--danger);">
-                    <strong>${cve.id}</strong><br>
-                    <span style="font-size:0.9rem;">${desc.substring(0, 200)}...</span>
-                </li>
-            `;
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
         });
-        html += '</ul>';
-        result.innerHTML = html;
-        logHerramienta('Buscador de CVEs', 'Buscar', query, 'ok');
-    } catch {
-        result.innerText = 'Error al buscar CVEs.';
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+    } catch (e) { mostrarToast("Error de conexión.", "error"); }
+}
+
+async function enviarReset() {
+    const email = document.getElementById('forgot-email').value;
+    if (!email) {
+        mostrarToast("Introduce tu correo electrónico.", "error");
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/solicitar_reset.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-forgot');
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
     }
 }
 
-function abrirCanarytoken(tipo, descripcion) {
-    window.open('https://canarytokens.org/generate', '_blank', 'noopener');
-    logHerramienta('Canarytokens', tipo, descripcion, 'abierto');
+async function toggle2FAEmail() {
+    try {
+        const response = await fetch(`${API_URL}/activar_2fa_email.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ activo: true }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            const btn = document.getElementById('btn-2fa-email');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
+        }
+    } catch (e) { 
+        mostrarToast("Error de conexión.", "error"); 
+    }
 }
 
-async function cargarGuia() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const guiaId = urlParams.get('id');
-    const tituloElement = document.getElementById('guia-titulo');
-    const nivelElement = document.getElementById('guia-nivel');
-    const contenidoElement = document.getElementById('guia-contenido');
+async function iniciar2FATOTP() {
+    try {
+        const response = await fetch(`${API_URL}/generar_2fa_totp.php`, { credentials: 'include' });
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('qr-container').innerHTML = `<img src="${result.qr_svg}" alt="Código QR" style="width: 100%; max-width: 200px; height: auto;">`;
+            document.getElementById('secret-text').innerText = result.secret;
+            abrirModal('modal-totp');
+        } else {
+            mostrarToast(result.message, "error");
+        }
+    } catch (e) { mostrarToast("Error al generar QR.", "error"); }
+}
 
-    if (!guiaId || !tituloElement || !contenidoElement) {
-        if(tituloElement) tituloElement.innerText = "Error";
-        if(contenidoElement) contenidoElement.innerHTML = "<p>No se ha especificado ninguna guía.</p>";
+async function confirmar2FATOTP() {
+    const codigo = document.getElementById('totp-codigo').value;
+    try {
+        const response = await fetch(`${API_URL}/confirmar_2fa_totp.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo: codigo }),
+            credentials: 'include'
+        });
+        const result = await response.json();
+        mostrarToast(result.message, result.success ? 'success' : 'error');
+        if (result.success) {
+            cerrarModal('modal-totp');
+            const btn = document.getElementById('btn-2fa-totp');
+            btn.innerText = 'Contactar Soporte';
+            btn.onclick = () => window.location.href = 'contacto.html';
+        }
+    } catch (e) { mostrarToast("Error", "error"); }
+}
+
+async function cargarBiblioteca() {
+    const contenedor = document.getElementById('contenedor-biblioteca');
+    if (!contenedor) return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const tipo = urlParams.get('tipo');
+    const categoriaActual = urlParams.get('cat');
+
+    const estructuraHerramientas = {
+        "red-team": {
+            titulo: "Red Team & Pentesting",
+            icon: "⚔️",
+            desc: "Herramientas para simular ataques, encontrar vulnerabilidades y explotar sistemas.",
+            herramientas: [
+                { id: 'dorks', titulo: 'Generador de Dorks', desc: 'Crea consultas avanzadas para Google que revelan archivos ocultos, paneles de administración o contraseñas expuestas en un dominio.', ideal: 'Encontrar documentos filtrados.' },
+                { id: 'payloads', titulo: 'Generador de Payloads', desc: 'Genera código malicioso básico para probar si tu aplicación web es vulnerable a inyecciones SQL o scripts cruzados (XSS).', ideal: 'Pruebas de concepto rápidas.' },
+                { id: 'cve', titulo: 'Buscador de CVEs', desc: 'Consulta la base de datos oficial de vulnerabilidades conocidas. Introduce el nombre de un software para ver sus fallos de seguridad.', ideal: 'Investigar fallos de seguridad.' }
+            ]
+        },
+        "blue-team": {
+            titulo: "Blue Team & Forense",
+            icon: "🛡️",
+            desc: "Herramientas para defensa, análisis de malware y respuesta a incidentes.",
+            herramientas: [
+                { id: 'hash', titulo: 'Analizador de Hash', desc: 'Pega un hash para identificar qué algoritmo se usó (MD5, SHA-1, SHA-256). Útil para verificar la integridad de archivos descargados.', ideal: 'Análisis de integridad.' },
+                { id: 'ssl', titulo: 'Analizador SSL/TLS', desc: 'Comprueba si el certificado de seguridad de un sitio web es válido y está correctamente configurado.', ideal: 'Auditar seguridad de servidores.' },
+                { id: 'http-headers', titulo: 'Inspector de Cabeceras HTTP', desc: 'Analiza las cabeceras de seguridad que envía un servidor web. Detecta si faltan protecciones contra ataques comunes.', ideal: 'Auditar configuraciones web.' }
+            ]
+        },
+        "osint": {
+            titulo: "OSINT e Inteligencia",
+            icon: "🕵️",
+            desc: "Recopila información de fuentes abiertas para investigaciones.",
+            herramientas: [
+                { id: 'osint', titulo: 'OSINT Framework', desc: 'Un mapa visual de herramientas y fuentes de información pública. Ideal para saber por dónde empezar una investigación.', ideal: 'Investigar antecedentes.' },
+                { id: 'ip', titulo: 'Buscador de IP / OSINT', desc: 'Introduce una dirección IP para descubrir su ubicación geográfica aproximada, el proveedor de internet y la organización a la que pertenece.', ideal: 'Rastrear origen de una visita.' },
+                { id: 'domain', titulo: 'Reconocimiento de Dominio', desc: 'Analiza un dominio para obtener su dirección IP, los servidores de correo (MX) y otra información de infraestructura.', ideal: 'OSINT de infraestructura.' },
+                { id: 'mac', titulo: 'Buscador de Fabricante (MAC)', desc: 'Introduce una dirección MAC para saber qué empresa fabricó el dispositivo (Apple, Samsung, Intel, etc.).', ideal: 'Análisis de redes locales.' },
+                { id: 'email', titulo: 'Validador de Correo', desc: 'Verifica si una dirección de correo tiene un formato válido y si el dominio al que pertenece existe realmente.', ideal: 'Limpieza de bases de datos.' }
+            ]
+        },
+        "utilidades": {
+            titulo: "Utilidades y Análisis",
+            icon: "🧰",
+            desc: "Herramientas para análisis de datos, criptografía y conversión.",
+            herramientas: [
+                { id: 'exif', titulo: 'Analizador EXIF', desc: 'Sube una foto para extraer los metadatos ocultos: fecha, modelo de cámara, y coordenadas GPS de donde se tomó.', ideal: 'Saber si una foto revela tu ubicación.' },
+                { id: 'pass', titulo: 'Generador de Contraseñas', desc: 'Crea contraseñas aleatorias y seguras con la longitud y los caracteres que elijas.', ideal: 'Proteger tus cuentas.' },
+                { id: 'pass-strength', titulo: 'Auditor de Contraseñas', desc: 'Escribe una contraseña para saber cuánto tiempo tardaría un atacante en descifrarla mediante fuerza bruta.', ideal: 'Mejorar tu seguridad personal.' },
+                { id: 'base64', titulo: 'Codificador Base64', desc: 'Convierte texto plano a Base64 y viceversa. Es un formato común para transmitir datos en la web.', ideal: 'Depurar peticiones web.' },
+                { id: 'jwt', titulo: 'Inspector de JWT', desc: 'Pega un token JWT para ver su contenido decodificado (cabecera y payload) sin necesidad de una clave secreta.', ideal: 'Entender autenticación moderna.' },
+                { id: 'json', titulo: 'Formateador JSON', desc: 'Pega un texto JSON desordenado para que se muestre con formato legible y validar si tiene errores de sintaxis.', ideal: 'Análisis de APIs y logs.' },
+                { id: 'regex', titulo: 'Probador de Regex', desc: 'Escribe un patrón de expresión regular y un texto para ver si coinciden en tiempo real.', ideal: 'Programación y filtrado de datos.' },
+                { id: 'timestamp', titulo: 'Conversor de Timestamp', desc: 'Convierte fechas normales a formato Unix (segundos desde 1970) y viceversa.', ideal: 'Análisis forense y logs.' },
+                { id: 'uuid', titulo: 'Generador de UUID', desc: 'Genera identificadores únicos universales (v4) para tus pruebas de APIs.', ideal: 'Desarrollo de software seguro.' }
+            ]
+        },
+        "redes": {
+            titulo: "Redes y Comunicaciones",
+            icon: "🌐",
+            desc: "Analiza la seguridad de tu conexión y protocolos de red.",
+            herramientas: [
+                { id: 'wifi', titulo: 'Analizador de Red Wi-Fi', desc: 'Analiza la calidad y seguridad de tu conexión actual, detecta si usas WPA2 o WPA3 y comprueba tu velocidad.', ideal: 'Saber si tu red doméstica es segura.' },
+                { id: 'dns', titulo: 'Fuga de DNS (DNS Leak)', desc: 'Comprueba si tu proveedor de internet está filtrando tu tráfico real o si tu VPN está funcionando correctamente.', ideal: 'Verificar privacidad de VPN.' },
+                { id: 'robots', titulo: 'Analizador de Robots.txt', desc: 'Descubre qué directorios y archivos está intentando ocultar un sitio web a los motores de búsqueda.', ideal: 'Reconocimiento web (OSINT).' },
+                { id: 'ua', titulo: 'Analizador User-Agent', desc: 'Descubre qué sistema operativo, navegador y motor está usando tu dispositivo.', ideal: 'Pruebas de compatibilidad web.' }
+            ]
+        },
+        "iot": {
+            titulo: "IoT y Hardware",
+            icon: "🔌",
+            desc: "Herramientas para el análisis de dispositivos conectados y hardware.",
+            herramientas: [
+                { id: 'iot-scan', titulo: 'Escáner de Dispositivos IoT', desc: 'Busca dispositivos conectados a tu red local y muestra su IP, MAC y fabricante.', ideal: 'Descubrir dispositivos en tu red.' },
+                { id: 'firmware', titulo: 'Analizador de Firmware', desc: 'Sube un archivo de firmware para extraer cadenas de texto y buscar credenciales o URLs ocultas.', ideal: 'Análisis de seguridad de dispositivos.' }
+            ]
+        }
+    };
+
+    const estructuraRecursos = {
+        "formacion": { titulo: "Formación y Certificaciones", icon: "🎓", desc: "Cursos, plataformas y certificaciones para iniciarte o especializarte.", ids: [1, 12, 13, 14, 15, 4, 5, 6, 7, 19, 20, 21] },
+        "red-team-rec": { titulo: "Red Team & Pentesting", icon: "⚔️", desc: "Herramientas y documentación para pruebas de penetración y explotación.", ids: [2, 23, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] },
+        "blue-team-rec": { titulo: "Blue Team & Forense", icon: "🛡️", desc: "Defensa, análisis forense y respuesta a incidentes.", ids: [3, 35, 36, 37, 38, 39, 40] },
+        "osint-rec": { titulo: "OSINT e Inteligencia", icon: "🕵️", desc: "Inteligencia de fuentes abiertas para investigar y recopilar información.", ids: [41, 42, 44, 45, 46, 47, 48, 49, 50] },
+        "sistemas": { titulo: "Sistemas Operativos", icon: "💻", desc: "Distribuciones Linux y entornos de trabajo para seguridad.", ids: [58, 59, 60, 61, 62, 63, 64, 65] },
+        "libros": { titulo: "Referentes y Libros", icon: "📚", desc: "Hackers destacados y bibliografía esencial en español.", ids: [71, 72, 73, 74, 75, 76, 84, 85, 86, 9, 77, 78, 79, 80, 81, 82, 83, 87, 88] },
+        "metodos": { titulo: "Métodos y Metodologías", icon: "📋", desc: "Metodologías de auditoría, pentesting y marcos de trabajo.", ids: [101, 102, 103] },
+        "iot": { titulo: "IoT y Hardware", icon: "🔌", desc: "Internet de las Cosas, dispositivos embebidos y hacking de hardware.", ids: [104, 105, 106] },
+        "redes-rec": { titulo: "Redes y Protocolos", icon: "🌐", desc: "Protocolos, análisis de tráfico y arquitecturas de red.", ids: [107, 108, 109] },
+        "wifi-rec": { titulo: "Wi-Fi y Radiofrecuencia", icon: "📡", desc: "Hacking de redes inalámbricas, SDR y radiofrecuencia.", ids: [110, 111, 112] },
+        "programacion": { titulo: "Programación y Desarrollo", icon: "💻", desc: "Lenguajes, scripts y desarrollo de herramientas propias.", ids: [113, 114, 115] },
+        "flipper": { titulo: "Flipper Zero", icon: "🐬", desc: "Repositorios, firmwares y recursos para el multiherramienta de hacking ético.", ids: [116, 117, 118, 119] }
+    };
+
+    if (!tipo && !categoriaActual) {
+        let html = `<h2>Biblioteca de Ciberseguridad</h2><p style="margin-bottom: 30px; color: var(--text-muted);">Elige qué quieres explorar hoy.</p>`;
+        html += `
+        <div class="folder-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+            <a href="biblioteca.html?tipo=herramientas" class="folder" style="border-color: var(--neon-blue);">
+                <div class="folder-icon" style="font-size: 3rem;">🛠️</div>
+                <h3>Laboratorio de Herramientas</h3>
+                <p>Utilidades interactivas y generadores para realizar análisis, pruebas y conversiones en tiempo real.</p>
+                <span class="folder-badge" style="background: var(--neon-blue); color: var(--bg-color);">Abrir Laboratorio</span>
+            </a>
+            <a href="biblioteca.html?tipo=recursos" class="folder" style="border-color: var(--neon-green);">
+                <div class="folder-icon" style="font-size: 3rem;">📚</div>
+                <h3>Directorio de Recursos</h3>
+                <p>Enlaces seleccionados a plataformas de formación, bibliografía, laboratorios y referentes del sector.</p>
+                <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Ver Directorio</span>
+            </a>
+            <a href="biblioteca.html?tipo=cve" class="folder" style="border-color: var(--neon-gold);">
+                <div class="folder-icon" style="font-size: 3rem;">🚨</div>
+                <h3>CVE en Tiempo Real</h3>
+                <p>Últimas vulnerabilidades y publicaciones oficiales de seguridad actualizadas automáticamente.</p>
+                <span class="folder-badge" style="background: var(--neon-gold); color: var(--bg-color);">Ver Alertas</span>
+            </a>
+        </div>`;
+        contenedor.innerHTML = html;
         return;
     }
 
-    const guia = GUIAS[guiaId];
-
-    if (guia) {
-        if (guia.requiere_login == 1 && !usuarioLogueado) {
-            tituloElement.innerText = "Contenido Protegido";
-            contenidoElement.innerHTML = `<p>Debes iniciar sesión para leer esta guía.</p><br><a href="login.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a Iniciar Sesión</a>`;
-            return;
+    if (tipo === 'herramientas' && !categoriaActual) {
+        let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Herramientas</span></div><h2>Laboratorio de Herramientas</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
+        for (const [slug, data] of Object.entries(estructuraHerramientas)) {
+            html += `
+                <a href="biblioteca.html?tipo=herramientas&cat=${slug}" class="folder">
+                    <div class="folder-icon">${data.icon}</div>
+                    <h3>${data.titulo}</h3>
+                    <p>${data.desc}</p>
+                    <span class="folder-badge">${data.herramientas.length} herramientas</span>
+                </a>
+            `;
         }
-        
-        document.title = guia.titulo + " | eLDeSiempre.es";
-        tituloElement.innerText = guia.titulo;
-        contenidoElement.innerHTML = guia.contenido;
-        
-        if (nivelElement) {
-            nivelElement.style.display = 'inline-block';
-            nivelElement.innerText = guia.nivel;
-            
-            if(guia.nivel === 'Principiante' || guia.nivel === 'Fácil') nivelElement.className = 'badge badge-curso';
-            else if(guia.nivel === 'Intermedio') nivelElement.className = 'badge badge-lab';
-            else if(guia.nivel === 'Avanzado' || guia.nivel === 'Experto') nivelElement.className = 'badge badge-sistema';
-            else nivelElement.className = 'badge badge-default';
-        }
-    } else {
-        try {
-            const res = await fetch(`${API_URL}/obtener_guia.php?id=${guiaId}`, { credentials: 'include' });
-            const result = await res.json();
-            
-            if (result.success) {
-                document.title = result.data.titulo + " | eLDeSiempre.es";
-                tituloElement.innerText = result.data.titulo;
-                contenidoElement.innerHTML = result.data.contenido;
-                
-                if (nivelElement) {
-                    nivelElement.style.display = 'inline-block';
-                    nivelElement.innerText = result.data.nivel;
-                    if(result.data.nivel === 'Principiante' || result.data.nivel === 'Fácil') nivelElement.className = 'badge badge-curso';
-                    else if(result.data.nivel === 'Intermedio') nivelElement.className = 'badge badge-lab';
-                    else if(result.data.nivel === 'Avanzado' || result.data.nivel === 'Experto') nivelElement.className = 'badge badge-sistema';
-                }
-            } else {
-                if (res.status === 403) {
-                    tituloElement.innerText = "Contenido Protegido";
-                    contenidoElement.innerHTML = `<p>${result.message}</p><br><a href="login.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Ir a Iniciar Sesión</a>`;
-                } else {
-                    tituloElement.innerText = "Guía no encontrada";
-                    contenidoElement.innerHTML = "<p>La guía que buscas no existe o ha sido eliminada.</p>";
-                }
-            }
-        } catch {
-            tituloElement.innerText = "Error de conexión";
-            contenidoElement.innerHTML = "<p>No se pudo cargar la guía. Inténtalo más tarde.</p>";
-        }
+        html += `</div>`;
+        contenedor.innerHTML = html;
+        return;
     }
-}
 
-function inicializarBurbujaCVE() {
-    if (document.getElementById('cve-bubble')) return;
+    if (tipo === 'herramientas' && categoriaActual) {
+        const dataCat = estructuraHerramientas[categoriaActual];
+        if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
 
-    const bubble = document.createElement('button');
-    bubble.id = 'cve-bubble';
-    bubble.className = 'cve-bubble';
-    bubble.setAttribute('aria-label', 'Alertas CVE');
-    bubble.innerHTML = `🚨<span class="cve-bubble-count" id="cve-bubble-count" style="display:none;">0</span>`;
-    document.body.appendChild(bubble);
+        let html = `
+            <div class="breadcrumb">
+                <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=herramientas">Herramientas</a> / <span>${dataCat.titulo}</span>
+            </div>
+            <div class="category-header">
+                <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+                <p>${dataCat.desc}</p>
+                <input type="text" id="buscador-herramientas" class="tool-input" placeholder="🔍 Buscar herramienta..." oninput="filtrarHerramientas()">
+            </div>
+            <div class="grid-cards" id="lista-herramientas">
+        `;
 
-    const panel = document.createElement('div');
-    panel.id = 'cve-panel';
-    panel.className = 'cve-panel';
-    panel.innerHTML = `
-        <div class="cve-panel-header">
-            <h3>🚨 Alertas CVE</h3>
-            <button type="button" onclick="cerrarPanelCVE()" aria-label="Cerrar">×</button>
-        </div>
-        <div class="cve-panel-body" id="cve-panel-body">
-            <p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Cargando...</p>
-        </div>
-        <div class="cve-panel-footer">
-            Fuentes: NIST NVD · Exploit-DB · INCIBE
-        </div>
-    `;
-    document.body.appendChild(panel);
-
-    bubble.addEventListener('click', togglePanelCVE);
-    cargarCVE();
-}
-
-function togglePanelCVE() {
-    const panel = document.getElementById('cve-panel');
-    const bubble = document.getElementById('cve-bubble');
-    if (!panel || !bubble) return;
-    const abierto = panel.classList.toggle('open');
-    if (abierto) {
-        bubble.classList.remove('pulse');
-        localStorage.setItem('cve_vistos', JSON.stringify([]));
-        actualizarContadorCVE(0);
-    }
-}
-
-function cerrarPanelCVE() {
-    document.getElementById('cve-panel')?.classList.remove('open');
-}
-
-function actualizarContadorCVE(n) {
-    const count = document.getElementById('cve-bubble-count');
-    if (!count) return;
-    if (n > 0) {
-        count.innerText = n > 99 ? '99+' : n;
-        count.style.display = 'flex';
-    } else {
-        count.style.display = 'none';
-    }
-}
-
-async function cargarCVE() {
-    const body = document.getElementById('cve-panel-body');
-    if (!body) return;
-    body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">Consultando fuentes...</p>';
-
-    try {
-        // 1. Obtener datos de NIST NVD (últimos 5 días)
-        const endDate = new Date();
-        const startDate = new Date();
-        startDate.setDate(endDate.getDate() - 5);
-        const formatDate = (date) => date.toISOString().split('.')[0] + 'Z';
-        
-        const nistUrl = `https://services.nvd.nist.gov/rest/json/cves/2.0?pubStartDate=${formatDate(startDate)}&pubEndDate=${formatDate(endDate)}&resultsPerPage=15`;
-        
-        // 2. Obtener datos de Exploit-DB (RSS)
-        const edbUrl = 'https://www.exploit-db.com/rss.xml';
-        
-        // 3. Obtener datos de INCIBE (RSS de vulnerabilidades, aproximado vía proxy)
-        // Nota: INCIBE no siempre expone un RSS directo de CVE, así que lo dejamos como opcional/fallback
-        // En este caso, usaremos NIST y Exploit-DB como fuentes primarias.
-
-        const [nistRes, edbRes] = await Promise.allSettled([
-            fetch(nistUrl),
-            fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(edbUrl)}`)
-        ]);
-
-        let cves = [];
-
-        // Procesar NIST
-        if (nistRes.status === 'fulfilled' && nistRes.value.ok) {
-            const nistData = await nistRes.value.json();
-            if (nistData.vulnerabilities) {
-                cves = nistData.vulnerabilities.map(v => {
-                    const cve = v.cve;
-                    const desc = cve.descriptions?.find(d => d.lang === 'en')?.value || 'Sin descripción.';
-                    const severity = cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseSeverity || 'UNKNOWN';
-                    return {
-                        id: cve.id,
-                        summary: desc,
-                        published: cve.published,
-                        severity: severity,
-                        source: 'NIST',
-                        hasExploit: false
-                    };
-                });
-            }
-        }
-
-        // Procesar Exploit-DB (buscar CVEs en los exploits)
-        if (edbRes.status === 'fulfilled' && edbRes.value.ok) {
-            const edbText = await edbRes.value.text();
-            const parser = new DOMParser();
-            const edbXml = parser.parseFromString(edbText, "text/xml");
-            const items = edbXml.querySelectorAll('item');
-            
-            const edbCves = [];
-            items.forEach(item => {
-                const title = item.querySelector('title')?.textContent || '';
-                const link = item.querySelector('link')?.textContent || '';
-                // Buscar patrón CVE-XXXX-YYYY en el título o descripción
-                const cveMatch = title.match(/CVE-\d{4}-\d{4,}/i);
-                if (cveMatch) {
-                    edbCves.push(cveMatch[0].toUpperCase());
-                }
-            });
-
-            // Marcar CVEs que tienen exploit
-            cves.forEach(c => {
-                if (edbCves.includes(c.id)) {
-                    c.hasExploit = true;
-                }
-            });
-
-            // Si hay CVEs de Exploit-DB que no están en NIST, añadirlos (con datos básicos)
-            edbCves.forEach(id => {
-                if (!cves.find(c => c.id === id)) {
-                    cves.push({
-                        id: id,
-                        summary: 'Exploit público detectado en Exploit-DB. Consulta los detalles.',
-                        published: new Date().toISOString(),
-                        severity: 'HIGH',
-                        source: 'Exploit-DB',
-                        hasExploit: true
-                    });
-                }
-            });
-        }
-
-        if (cves.length === 0) {
-            body.innerHTML = '<p style="text-align:center;color:var(--text-muted);font-size:0.85rem;">No hay alertas disponibles en este momento.</p>';
-            return;
-        }
-
-        // Ordenar: primero los que tienen exploit, luego por fecha
-        cves.sort((a, b) => {
-            if (a.hasExploit && !b.hasExploit) return -1;
-            if (!a.hasExploit && b.hasExploit) return 1;
-            return new Date(b.published) - new Date(a.published);
-        });
-
-        // Actualizar contador
-        const vistos = JSON.parse(localStorage.getItem('cve_vistos') || '[]');
-        const nuevos = cves.filter(c => !vistos.includes(c.id));
-        if (nuevos.length > 0) {
-            actualizarContadorCVE(nuevos.length);
-            document.getElementById('cve-bubble')?.classList.add('pulse');
-            localStorage.setItem('cve_vistos', JSON.stringify(cves.map(c => c.id)));
-        }
-
-        // Renderizar
-        body.innerHTML = cves.map(cve => {
-            const desc = cve.summary ? cve.summary.substring(0, 150) + '…' : 'Sin descripción.';
-            const fecha = cve.published ? new Date(cve.published).toLocaleDateString('es-ES') : '—';
-            const exploitBadge = cve.hasExploit 
-                ? `<span style="background:var(--danger);color:#fff;padding:2px 6px;border-radius:4px;font-size:0.7rem;margin-left:5px;">💀 PoC Público</span>` 
-                : '';
-            const severityColor = cve.severity === 'CRITICAL' ? 'var(--danger)' : cve.severity === 'HIGH' ? 'var(--neon-gold)' : 'var(--text-muted)';
-            
-            return `
-                <div class="cve-item" style="border-left-color: ${severityColor};">
-                    <div class="cve-item-header">
-                        <span class="cve-item-id" style="color: ${severityColor};">${cve.id} ${exploitBadge}</span>
-                        <span class="cve-item-date">${fecha}</span>
-                    </div>
-                    <div class="cve-item-desc">${desc}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
-                        <span style="font-size:0.7rem; color:var(--text-muted);">Fuente: ${cve.source}</span>
-                        <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="cve-item-link">Ver detalles →</a>
-                    </div>
+        dataCat.herramientas.forEach(h => {
+            html += `
+                <div class="card" data-titulo="${h.titulo.toLowerCase()}" onclick="abrirModal('modal-${h.id}')">
+                    <h3>${h.titulo}</h3>
+                    <p>${h.desc}</p>
+                    <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Ideal para: ${h.ideal}</p>
                 </div>
             `;
-        }).join('');
+        });
 
-    } catch (err) {
-        console.error('Error al cargar CVEs:', err);
-        body.innerHTML = '<p style="text-align:center;color:var(--danger);font-size:0.85rem;">Error al cargar alertas. Inténtalo de nuevo más tarde.</p>';
+        html += `</div>`;
+        contenedor.innerHTML = html;
+        return;
+    }
+
+    if (tipo === 'recursos' && !categoriaActual) {
+        let html = `<div class="breadcrumb"><a href="biblioteca.html">Biblioteca</a> / <span>Recursos</span></div><h2>Directorio de Recursos</h2><p style="margin-bottom: 20px; color: var(--text-muted);">Selecciona una categoría para explorar.</p><div class="folder-grid">`;
+        for (const [slug, data] of Object.entries(estructuraRecursos)) {
+            html += `
+                <a href="biblioteca.html?tipo=recursos&cat=${slug}" class="folder">
+                    <div class="folder-icon">${data.icon}</div>
+                    <h3>${data.titulo}</h3>
+                    <p>${data.desc}</p>
+                    <span class="folder-badge">${data.ids.length} enlaces</span>
+                </a>
+            `;
+        }
+        html += `</div>`;
+        contenedor.innerHTML = html;
+        return;
+    }
+
+    if (tipo === 'recursos' && categoriaActual) {
+        const dataCat = estructuraRecursos[categoriaActual];
+        if (!dataCat) { contenedor.innerHTML = "<p>Categoría no encontrada.</p>"; return; }
+
+        if (categoriaActual === 'flipper') {
+            let html = `
+                <div class="breadcrumb">
+                    <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>Flipper Zero</span>
+                </div>
+                <div class="category-header">
+                    <h2>🐬 Flipper Zero</h2>
+                    <p>Repositorios y recursos esenciales para exprimir al máximo el multiherramienta de hacking ético.</p>
+                </div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-header">
+                            <span class="resource-title">UberGuidoZ / Flipper</span>
+                            <span class="badge badge-hacker">Repositorio</span>
+                        </div>
+                        <div class="resource-desc">El repositorio comunitario más importante para Flipper Zero. Contiene una colección masiva de archivos organizados por Sub-GHz, NFC, RFID, Infrared, BadUSB y gráficos. Es el punto de partida ideal para llenar tu SD con señales y scripts probados por la comunidad.</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: Tener una base sólida de archivos y señales.</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="https://github.com/UberGuidoZ/Flipper" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
+                        </div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-header">
+                            <span class="resource-title">UberGuidoZ / Flipper-IRDB</span>
+                            <span class="badge badge-hacker">Base de Datos IR</span>
+                        </div>
+                        <div class="resource-desc">La base de datos de códigos infrarrojos mantenida por la comunidad más grande que existe. Organizada por fabricante y tipo de dispositivo (TVs, aires acondicionados, LEDs, etc.). Si tu mando no está aquí, probablemente no exista.</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: Controlar cualquier dispositivo con IR.</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="https://github.com/UberGuidoZ/Flipper-IRDB" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
+                        </div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-header">
+                            <span class="resource-title">justcallmekoko / ESP32Marauder</span>
+                            <span class="badge badge-herramienta">Firmware</span>
+                        </div>
+                        <div class="resource-desc">El firmware de referencia para el módulo WiFi Dev Board del Flipper. Convierte tu Flipper en una potente herramienta de auditoría Wi-Fi y Bluetooth: escaneo de redes, captura de handshakes, ataques de desautenticación y wardriving. Requiere instalar la app Companion en el Flipper.</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: Auditorías de redes inalámbricas.</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="https://github.com/justcallmekoko/ESP32Marauder" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
+                        </div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-header">
+                            <span class="resource-title">djsime1 / awesome-flipperzero</span>
+                            <span class="badge badge-libro">Lista Curada</span>
+                        </div>
+                        <div class="resource-desc">Una lista curada de recursos, aplicaciones, firmwares y herramientas para Flipper Zero. Es el mejor lugar para descubrir nuevas apps, juegos y utilidades que no conocías. Mantenida y actualizada por la comunidad.</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: Descubrir nuevas apps y recursos.</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="https://github.com/djsime1/awesome-flipperzero" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
+                        </div>
+                    </li>
+                    <li class="resource-item">
+                        <div class="resource-header">
+                            <span class="resource-title">SYOP200 / Flipper-Zero-Downloads</span>
+                            <span class="badge badge-doc">Colección</span>
+                        </div>
+                        <div class="resource-desc">Una colección curada de plugins, archivos y firmwares para Flipper Zero. Organizada por tipo de archivo (Firmware, GPIO, Apps, Sub-GHz, Infrared, NFC, BadUSB, etc.). Muy útil si quieres descargar todo en un solo lugar sin tener que buscar repo por repo.</div>
+                        <div class="resource-meta">
+                            <span class="resource-ideal">Ideal para: Descargar paquetes completos de archivos.</span>
+                        </div>
+                        <div class="resource-actions">
+                            <a href="https://github.com/SYOP200/Flipper-Zero-Downloads" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al repositorio]</a>
+                        </div>
+                    </li>
+                </ul>
+            `;
+            contenedor.innerHTML = html;
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/obtener_recursos.php`, { method: 'GET', credentials: 'include' });
+            if (!response.ok) throw new Error("Error de red");
+            const result = await response.json();
+
+            if (result.success) {
+                const recursosCat = result.data.filter(r => dataCat.ids.includes(r.id) || (categoriaActual === "formacion" && r.categoria_id == 1) || (categoriaActual === "red-team-rec" && r.categoria_id == 2) || (categoriaActual === "blue-team-rec" && r.categoria_id == 3) || (categoriaActual === "osint-rec" && r.categoria_id == 4) || (categoriaActual === "sistemas" && r.categoria_id == 6) || (categoriaActual === "libros" && (r.categoria_id == 8 || r.categoria_id == 9)) || (categoriaActual === "metodos" && r.categoria_id == 10) || (categoriaActual === "iot" && r.categoria_id == 11) || (categoriaActual === "redes-rec" && r.categoria_id == 12) || (categoriaActual === "wifi-rec" && r.categoria_id == 13) || (categoriaActual === "programacion" && r.categoria_id == 14));
+
+                let html = `
+                    <div class="breadcrumb">
+                        <a href="biblioteca.html">Biblioteca</a> / <a href="biblioteca.html?tipo=recursos">Recursos</a> / <span>${dataCat.titulo}</span>
+                    </div>
+                    <div class="category-header">
+                        <h2>${dataCat.icon} ${dataCat.titulo}</h2>
+                        <p>${dataCat.desc}</p>
+                        <input type="text" id="buscador-recursos" class="tool-input" placeholder="🔍 Buscar en esta categoría..." oninput="filtrarRecursos()">
+                    </div>
+                    <ul class="resource-list" id="lista-recursos">
+                `;
+
+                recursosCat.forEach(r => {
+                    const badgeClass = getBadgeClass(r.tipo);
+                    const badge = r.tipo ? `<span class="badge ${badgeClass}">${r.tipo}</span>` : '';
+                    const userVoted = result.votos && result.votos.includes(r.id) ? 'votado' : '';
+                    html += `
+                        <li class="resource-item" data-titulo="${r.titulo.toLowerCase()}">
+                            <div class="resource-header">
+                                <span class="resource-title">${r.titulo}</span>
+                                ${badge}
+                            </div>
+                            <div class="resource-desc">${r.descripcion}</div>
+                            <div class="resource-meta">
+                                <span class="resource-ideal">Ideal para: ${r.ideal_para || 'Aprender y practicar'}</span>
+                            </div>
+                            <div class="resource-actions">
+                                <a href="${r.url}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ir al recurso]</a>
+                                <button class="btn-voto ${userVoted}" onclick="votarRecurso(${r.id}, this)">⭐ <span>${r.votos || 0}</span></button>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                if (recursosCat.length === 0) {
+                    html += `<li style="text-align:center; padding: 20px;">No hay recursos disponibles en esta categoría.</li>`;
+                }
+
+                html += `</ul>`;
+                contenedor.innerHTML = html;
+            }
+        } catch (error) {
+            contenedor.innerHTML = "<p style='color: var(--danger);'>Error al cargar los recursos.</p>";
+        }
+        return;
+    }
+
+    if (tipo === 'cve') {
+        let html = `
+            <div class="breadcrumb">
+                <a href="biblioteca.html">Biblioteca</a> / <span>CVE en Tiempo Real</span>
+            </div>
+            <div class="category-header">
+                <h2>🚨 Alertas de Vulnerabilidad</h2>
+                <p>Últimas publicaciones oficiales de CVE (Common Vulnerabilities and Exposures).</p>
+            </div>
+            <div id="cve-lista" style="display: flex; flex-direction: column; gap: 15px;">
+                <p style="text-align: center; color: var(--text-muted);">Cargando alertas...</p>
+            </div>
+        `;
+        contenedor.innerHTML = html;
+        cargarCVEEnTiempoReal();
+        return;
     }
 }
 
-window.addEventListener('load', async () => {
-    await comprobarSesion();
-    const activeKey = document.body.dataset.nav || '';
-    renderHeader(activeKey);
-    comprobarDisclaimer();
-    protegerContenidoPrivado();
+async function cargarCVEEnTiempoReal() {
+    const lista = document.getElementById('cve-lista');
+    if (!lista) return;
 
+    try {
+        const response = await fetch('https://cve.circl.lu/api/last/20');
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            let html = '';
+            data.forEach(cve => {
+                const desc = cve.summary ? cve.summary.substring(0, 200) + '...' : 'Sin descripción disponible.';
+                const fecha = cve.Published ? new Date(cve.Published).toLocaleDateString() : 'Fecha desconocida';
+                html += `
+                    <div class="resource-item" style="border-left: 4px solid var(--danger);">
+                        <div class="resource-header">
+                            <span class="resource-title" style="color: var(--danger);">${cve.id}</span>
+                            <span class="badge badge-sistema">${fecha}</span>
+                        </div>
+                        <div class="resource-desc">${desc}</div>
+                        <div class="resource-actions">
+                            <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="btn-link">[Ver detalles en NVD]</a>
+                        </div>
+                    </div>
+                `;
+            });
+            lista.innerHTML = html;
+        } else {
+            lista.innerHTML = `<p style="text-align: center; color: var(--text-muted);">No hay alertas disponibles en este momento.</p>`;
+        }
+    } catch (error) {
+        lista.innerHTML = `<p style="text-align: center; color: var(--danger);">Error al cargar las alertas. Inténtalo más tarde.</p>`;
+    }
+}
+
+function filtrarHerramientas() {
+    const input = document.getElementById('buscador-herramientas').value.toLowerCase();
+    const items = document.querySelectorAll('#lista-herramientas .card');
+    items.forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(input) ? 'flex' : 'none';
+    });
+}
+
+function filtrarRecursos() {
+    const input = document.getElementById('buscador-recursos').value.toLowerCase();
+    const items = document.querySelectorAll('#lista-recursos .resource-item');
+    items.forEach(item => {
+        const titulo = item.getAttribute('data-titulo');
+        item.style.display = titulo.includes(input) ? 'flex' : 'none';
+    });
+}
+
+window.onload = async () => {
+    inicializarTema();
+    comprobarDisclaimer();
+    await comprobarSesion();
+    protegerContenidoPrivado();
     if (window.location.pathname.includes('biblioteca.html')) cargarBiblioteca();
     if (window.location.pathname.includes('perfil.html')) cargarPerfil();
-    if (window.location.pathname.includes('guia.html')) cargarGuia();
-
-    inicializarBurbujaCVE();
-
     if (!sessionStorage.getItem('visita_alertada')) {
-        fetch(`${API_URL}/visita.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: window.location.href })
-        }).catch(() => {});
+        fetch(`${API_URL}/visita.php`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: window.location.href }) }).catch(err => console.log("Error"));
         sessionStorage.setItem('visita_alertada', 'true');
     }
-});
+};

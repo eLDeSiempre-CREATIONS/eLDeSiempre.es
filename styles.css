@@ -326,6 +326,18 @@ h2::before {
     border-color: var(--neon-blue);
 }
 
+.active-filter {
+    background: var(--neon-blue);
+    color: var(--btn-text);
+    border-color: var(--neon-blue);
+}
+
+.active-filter:hover {
+    background: var(--neon-blue);
+    color: var(--btn-text);
+    opacity: 0.9;
+}
+
 .folder-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

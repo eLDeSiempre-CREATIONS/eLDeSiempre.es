@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="toast-container"></div>
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="toast-container" role="status" aria-live="polite"></div>
 
     <header>
         <button class="logo-container" onclick="window.location.href='index.html'">
@@ -45,46 +46,6 @@
         </form>
     </main>
 
-    <script src="app.js"></script>
-    <script>
-        document.getElementById('form-reset').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            
-            if (!token) {
-                mostrarToast("Token no válido o ausente.", "error");
-                return;
-            }
-
-            const pass = document.getElementById('reset-password').value;
-            const passConfirm = document.getElementById('reset-password-confirm').value;
-
-            if (pass !== passConfirm) {
-                mostrarToast("Las contraseñas no coinciden.", "error");
-                return;
-            }
-
-            try {
-                const response = await fetch('https://api.eldesiempre.es/reset_password.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token: token, password: pass })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    mostrarToast("Contraseña actualizada. Redirigiendo al login...", "success");
-                    setTimeout(() => window.location.href = 'login.html', 2000);
-                } else {
-                    mostrarToast(result.message, "error");
-                }
-            } catch (error) {
-                mostrarToast("Error de conexión.", "error");
-            }
-        });
-    </script>
+    <script type="module" src="js/pages/reset.js"></script>
 </body>
 </html>

@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Administración | eLDeSiempre</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Dashboard Admin | eLDeSiempre</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #admin-curtain { position: fixed; inset: 0; background: var(--bg-color); z-index: 99999; display: flex; justify-content: center; align-items: center; color: var(--neon-green); font-family: monospace; font-size: 1.2rem; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .tab-btn { background: none; border: 1px solid var(--border); color: var(--text-main); padding: 10px 20px; cursor: pointer; border-radius: 4px; font-family: inherit; }
+        .tab-btn.active { background: var(--neon-blue); color: var(--bg-color); border-color: var(--neon-blue); font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+        .admin-table th, .admin-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+        .admin-table th { background: var(--card-bg); color: var(--neon-green); }
+        .admin-form { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border); }
+    </style>
 </head>
 <body>
+    <div id="admin-curtain">&gt; Verificando credenciales de administrador...</div>
+
     <header>
         <div class="logo-text">eLDeSiempre<span>.es</span> | Admin</div>
         <nav>
@@ -15,45 +30,53 @@
         </nav>
     </header>
 
-    <main class="container">
-        <h2>Panel de Control</h2>
+    <main class="container" style="display:none;" id="admin-main">
+        <h2>Panel de Control Global</h2>
         
-        <div class="auth-form" style="max-width: 800px; margin: 0 auto;">
-            <h3>➕ Añadir Nuevo Recurso</h3>
-            <form id="form-admin">
-                <div class="form-field">
-                    <label>Categoría / Subcategoría</label>
-                    <select id="admin-categoria" class="tool-input" required>
-                        <option value="">Cargando categorías...</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label>Título del Recurso</label>
-                    <input type="text" id="admin-titulo" class="tool-input" placeholder="Ej: Curso de Python" required>
-                </div>
-                <div class="form-field">
-                    <label>URL (Enlace)</label>
-                    <input type="url" id="admin-url" class="tool-input" placeholder="https://..." required>
-                </div>
-                <div class="form-field">
-                    <label>Descripción</label>
-                    <textarea id="admin-descripcion" class="tool-input" rows="3" placeholder="De qué trata..." required></textarea>
-                </div>
-                <div class="form-field">
-                    <label>Tipo (Etiqueta)</label>
-                    <input type="text" id="admin-tipo" class="tool-input" placeholder="Ej: Curso, Libro, Herramienta" required>
-                </div>
-                <div class="form-field">
-                    <label>Ideal para...</label>
-                    <input type="text" id="admin-ideal" class="tool-input" placeholder="Ej: Aprender desde cero">
-                </div>
-                <div class="form-field">
-                    <label>Paso a paso (HTML permitido)</label>
-                    <textarea id="admin-pasos" class="tool-input" rows="4" placeholder="<ul><li>Paso 1...</li></ul>"></textarea>
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%;">Guardar Recurso</button>
-            </form>
-            <div id="admin-result" class="tool-result"></div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('recursos')">Recursos</button>
+            <button class="tab-btn" onclick="switchTab('usuarios')">Usuarios y Permisos</button>
+            <button class="tab-btn" onclick="switchTab('guias')">Guías</button>
+            <button class="tab-btn" onclick="switchTab('logs')">Logs de Actividad</button>
+        </div>
+
+        <div id="tab-recursos" class="tab-content active">
+            <div class="admin-form">
+                <h3>Añadir Recurso</h3>
+                <form id="form-recurso" style="display:grid; gap:10px; margin-top:10px;">
+                    <select id="rec-cat" class="tool-input" required><option value="">Cargando categorías...</option></select>
+                    <input type="text" id="rec-titulo" class="tool-input" placeholder="Título" required>
+                    <input type="url" id="rec-url" class="tool-input" placeholder="https://..." required>
+                    <textarea id="rec-desc" class="tool-input" placeholder="Descripción" required></textarea>
+                    <input type="text" id="rec-tipo" class="tool-input" placeholder="Tipo (Curso, Libro, etc)" required>
+                    <input type="text" id="rec-ideal" class="tool-input" placeholder="Ideal para...">
+                    <button type="submit" class="btn-primary">Guardar Recurso</button>
+                </form>
+            </div>
+            <div id="lista-recursos"></div>
+        </div>
+
+        <div id="tab-usuarios" class="tab-content">
+            <div id="lista-usuarios"></div>
+        </div>
+
+        <div id="tab-guias" class="tab-content">
+            <div class="admin-form">
+                <h3>Añadir Guía</h3>
+                <form id="form-guia" style="display:grid; gap:10px; margin-top:10px;">
+                    <input type="text" id="guia-slug" class="tool-input" placeholder="slug-de-la-guia" required>
+                    <input type="text" id="guia-titulo" class="tool-input" placeholder="Título de la guía" required>
+                    <select id="guia-nivel" class="tool-input"><option value="Principiante">Principiante</option><option value="Fácil">Fácil</option><option value="Medio">Medio</option><option value="Difícil">Difícil</option><option value="Experto">Experto</option></select>
+                    <select id="guia-login" class="tool-input"><option value="0">Pública</option><option value="1">Requiere Login</option></select>
+                    <textarea id="guia-contenido" class="tool-input" rows="5" placeholder="Contenido HTML..." required></textarea>
+                    <button type="submit" class="btn-primary">Guardar Guía</button>
+                </form>
+            </div>
+            <div id="lista-guias"></div>
+        </div>
+
+        <div id="tab-logs" class="tab-content">
+            <div id="lista-logs"></div>
         </div>
     </main>
 

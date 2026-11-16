@@ -9,9 +9,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   initDisclaimer();
   await initNav();
   
-  const usuario = await requireSession();
-  if (usuario) {
-    document.getElementById('main-content').style.display = 'block';
-    initProfile();
+  try {
+    const usuario = await requireSession();
+    if (usuario) {
+      initProfile();
+    }
+  } catch (error) {
+    console.error("Error cargando sesión:", error);
   }
 });

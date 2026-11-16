@@ -2,53 +2,49 @@
 
 **Donde la seguridad y el conocimiento se encuentran.**
 
-eLDeSiempre.es es una plataforma web educativa enfocada en ciberseguridad y hacking ético. Su objetivo es centralizar los mejores recursos gratuitos, herramientas y guías de aprendizaje en español, estructurados como un recorrido desde cero hasta nivel experto. Todo bajo una estética de terminal inmersiva, un rendimiento excepcional y un fuerte enfoque en la seguridad y la privacidad.
+**eLDeSiempre.es** es el directorio de referencia absoluto en español para el conocimiento técnico, la cultura hacker y el código abierto. No somos una academia; somos un repositorio masivo, curado y estructurado de los mejores recursos gratuitos (y de pago seleccionados), documentación, libros, herramientas y proyectos. 
+
+Nuestro objetivo es centralizar y organizar el conocimiento (estilo *Wikipedia* o *Archive.org*) para ahorrar horas de búsqueda a programadores, entusiastas de la electrónica, hackers y estudiantes de habla hispana.
 
 ---
 
 ### 🚀 Características Principales
 
-*   **Rutas de Aprendizaje (SEO):** Guías públicas estructuradas por niveles (Principiante, Fácil, Medio, Difícil, Experto). Los usuarios pueden empezar desde lo más básico (¿Qué es internet?) hasta técnicas avanzadas (Red Team). Algunas guías avanzadas requieren estar registrado.
-*   **Biblioteca de Recursos (Privada):** Directorio masivo y jerárquico (tipo árbol) de enlaces clasificados en 9 categorías. Incluye:
-    *   Formación y Certificaciones.
-    *   Plataformas de Práctica (Hack The Box, TryHackMe).
-    *   Red Team y Pentesting.
-    *   Blue Team y Forense.
-    *   Herramientas OSINT.
-    *   Desarrollo Seguro.
-    *   Sistemas Operativos (Kali, Parrot, Tails).
-    *   Referentes Hispanos (Chema Alonso, DragonJAR, etc.).
-    *   Bibliografía en Español (0xWord).
-    *   *Sistema de votaciones integrado para destacar los mejores recursos.*
-*   **Laboratorio de Herramientas (Público):** Más de 20 utilidades funcionales, 100% seguras y sin vulnerar la privacidad de terceros:
-    *   OSINT: OSINT Framework, Generador de Dorks, Reconocimiento de Dominio, Analizador de MAC.
-    *   Redes: Analizador Wi-Fi, Fuga de DNS, Buscador de IP.
-    *   Utilidades: Analizador EXIF, Generador de Hash, Generador de Contraseñas, Auditor de Contraseñas, Inspector JWT, Base64, Formateador JSON, Conversor Timestamp, User-Agent, Regex, UUID.
-    *   *Todas las acciones se registran de forma anónima en Discord para auditoría de seguridad.*
-*   **Sistema de Usuarios:** Registro y login con verificación por correo, sesiones protegidas, perfiles personalizables (bio, habilidades, GitHub) y limitación de intentos.
-*   **Diseño Adaptable:** Interfaz responsive con **Modo Oscuro (terminal) y Modo Claro (limpio)**. El usuario puede alternar y guardar su preferencia.
-*   **Comunidad:** Integración directa con un servidor privado de Discord.
+*   **Directorio Unificado y Jerárquico (Privado):** Un árbol de conocimiento profundo que abarca múltiples disciplinas. Los recursos están estructurados por niveles (Categoría > Subcategoría > Recurso) para una navegación intuitiva:
+    *   **Formación:** Plataformas gratuitas, cursos, certificaciones (Microsoft Learn, Cisco).
+    *   **Programación:** Documentación oficial, repositorios y guías de desarrollo seguro.
+    *   **Ciberseguridad:** Red Team, Blue Team, OSINT, laboratorios vulnerables (HTB, TryHackMe) y herramientas (Nmap, Burp Suite, Exploit-DB).
+    *   **Electrónica y Hardware:** Datasheets, proyectos DIY, microcontroladores (Arduino, ESP32) y hardware de hacking (Proxmark3, Flipper Zero).
+    *   **Sistemas y Redes:** Distribuciones Linux, protocolos y manuales de administración.
+    *   **Documentación y Libros:** RFCs, estándares (W3C, ISO), bibliotecas y referentes hispanos.
+    *   *Sistema de votaciones (Upvotes) integrado para destacar los mejores recursos.*
+*   **Navegación tipo Terminal:** Interfaz inmersiva que simula una consola Linux. Árbol de directorios visual (`├──`), prompts de comandos y botón de retorno (`cd ..`) para evitar que el usuario se pierda.
+*   **Laboratorio de Herramientas (Público):** Más de 25 utilidades funcionales interactivas (OSINT, Redes, Criptografía, Análisis). Todas las acciones se registran de forma anónima en Discord para auditoría de seguridad.
+*   **Buscador Global (Ctrl+K):** Sistema de búsqueda rápida estilo *Spotlight* para encontrar cualquier recurso o herramienta al instante.
+*   **Sistema de Usuarios Completo:** Registro y login con verificación por correo, sesiones protegidas, perfiles personalizables (bio, habilidades, GitHub) y Autenticación en Dos Pasos (2FA por Email o App).
+*   **Diseño Adaptable:** Interfaz responsive con **Modo Oscuro (terminal)** y **Modo Claro (limpio)**, guardando la preferencia del usuario.
 
 ---
 
 ### 🛠️ Arquitectura Técnica
 
-El proyecto está construido priorizando el rendimiento, la seguridad y la simplicidad, sin depender de frameworks pesados:
+El proyecto está construido priorizando el rendimiento extremo, la seguridad y la simplicidad, sin depender de frameworks pesados:
 
-*   **Frontend:** HTML, CSS y JavaScript puro (Vanilla JS). Estructura multipágina alojada en GitHub Pages.
-*   **Backend:** API RESTful desarrollada en PHP (Nginx + PHP 8.5-FPM) alojada en un VPS propio.
-*   **Base de Datos:** MySQL, utilizando PDO con *Prepared Statements* para prevenir inyecciones SQL.
+*   **Frontend:** HTML5, CSS3 (Variables CSS para temas) y **Vanilla JavaScript (Módulos ES6)**. Alojado en GitHub Pages.
+*   **Backend:** API RESTful desarrollada en **PHP 8.5** (Nginx + PHP 8.5-FPM) alojada en un VPS propio. Respuestas JSON estrictas.
+*   **Base de Datos:** MySQL, utilizando **PDO con Prepared Statements** y un diseño relacional jerárquico (Categorías con `parent_id`).
 *   **App Móvil:** WebView nativo de Android (Kotlin) con pantalla completa inmersiva (En desarrollo).
 *   **Analítica:** Matomo autoalojado en Docker, garantizando el 100% de privacidad.
 *   **Control:** Alertas y notificaciones centralizadas en un canal privado de Discord mediante Webhooks.
 
 #### 🔒 Medidas de Seguridad Implementadas
 *   Credenciales de base de datos y correo aisladas en un archivo `.env` externo (bloqueado por Nginx).
-*   Control estricto de CORS y sesiones (HttpOnly, Secure, SameSite=Strict) desde PHP.
+*   Control estricto de CORS y sesiones (`HttpOnly`, `Secure`, `SameSite=Strict`) desde PHP.
 *   Hashing de contraseñas mediante `password_hash` (Bcrypt) y `session_regenerate_id`.
 *   Protección de rutas privadas en el frontend (cortina JS) y validación obligatoria en el backend (PHP).
 *   Carga dinámica de recursos protegidos: el contenido solo viaja al cliente si hay una sesión válida.
 *   Rate Limiting contra ataques de fuerza bruta en login y anti-spam (Honeypot) en el formulario de contacto.
+*   Manejo global de excepciones (`set_exception_handler`) para no filtrar errores de SQL al frontend.
 
 ---
 

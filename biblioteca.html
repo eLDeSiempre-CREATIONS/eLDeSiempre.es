@@ -24,7 +24,8 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
 </head>
-<body data-nav="biblioteca">
+<body data-nav="biblioteca" class="locked">
+    <div id="curtain" style="position:fixed; inset:0; background:var(--bg-color); z-index:99999; display:flex; justify-content:center; align-items:center; color:var(--neon-green); font-family:monospace; font-size:1.2rem;">&gt; Verificando sesión...</div>
     <a href="#contenedor-biblioteca" class="skip-link">Saltar al contenido principal</a>
     <div id="toast-container" role="status" aria-live="polite"></div>
 
@@ -43,8 +44,7 @@
         </nav>
     </header>
 
-    <main class="container" id="contenedor-biblioteca">
-    </main>
+    <main class="container" id="contenedor-biblioteca"></main>
 
     <div id="modales-herramientas">
         <div class="modal-overlay" id="modal-osint"><div class="modal-content"><button class="close-btn" onclick="cerrarModal('modal-osint')">×</button><h2>OSINT Framework</h2><iframe src="https://osintframework.com/" style="width: 100%; height: 500px; border: none; background: #fff; border-radius: 4px;"></iframe></div></div>

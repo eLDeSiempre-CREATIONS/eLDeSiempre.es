@@ -132,7 +132,7 @@ export async function renderResourcesCategory(contenedor, categoriaActual) {
   contenedor.innerHTML = html + `<p style="text-align: center; color: var(--text-muted);">Cargando recursos...</p>`;
 
   try {
-    const queryUrl = subcatData.catId ? `${CONFIG.ENDPOINTS.obtenerRecursos}?cat_id=${subcatData.catId}` : CONFIG.ENDPOINTS.obtenerRecursos;
+    const queryUrl = `${CONFIG.ENDPOINTS.obtenerRecursos}?slug=${subcatData.slug}`;
     const result = await http.get(queryUrl);
     
     if (result.success) {

@@ -17,8 +17,8 @@ export async function initProfile() {
   const btn2FAEmail = $('#btn-2fa-email');
   const btn2FATOTP = $('#btn-2fa-totp');
 
-  if (userSpan) userSpan.innerText = st.usuario.usuario;
-  if (nameSpan) nameSpan.innerText = st.usuario.nombre;
+  if (userSpan) userSpan.innerText = st.usuario.usuario || 'usuario';
+  if (nameSpan) nameSpan.innerText = st.usuario.nombre || 'Usuario';
 
   try {
     const result = await http.get(CONFIG.ENDPOINTS.obtenerPerfil);
@@ -47,7 +47,7 @@ export async function initProfile() {
       }
     }
   } catch (e) {
-    mostrarToast('Error al cargar perfil', 'error');
+    mostrarToast('Error al cargar perfil. Revisa tu conexión.', 'error');
   }
 
   const formPerfil = $('#form-perfil');
@@ -56,13 +56,13 @@ export async function initProfile() {
       e.preventDefault();
       try {
         const result = await http.post(CONFIG.ENDPOINTS.actualizarPerfil, {
-          bio: bioInput.value,
-          habilidades: habInput.value,
-          github: gitInput.value
+          bio: bioInput ? bioInput.value : '',
+          habilidades: habInput ? habInput.value : '',
+          github: gitInput ? gitInput.value : ''
         });
-        if (result.success) mostrarToast('Perfil actualizado', 'success');
+        if (result.success) mostrarToast('Perfil actualizado correctamente', 'success');
       } catch (error) {
-        mostrarToast('Error al actualizar', 'error');
+        mostrarToast('Error al actualizar el perfil', 'error');
       }
     });
   }
@@ -71,13 +71,17 @@ export async function initProfile() {
   if (btnConfirmTotp) {
     btnConfirmTotp.addEventListener('click', async () => {
       const codigo = $('#totp-codigo').value;
+      if(!codigo) return mostrarToast("Introduce el código", "error");
+      
       try {
         const result = await http.post(CONFIG.ENDPOINTS.confirmar2FATOTP, { codigo });
         if (result.success) {
           mostrarToast(result.message, 'success');
           cerrarModal('modal-totp');
-          btn2FATOTP.innerText = 'Contactar Soporte';
-          btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
+          if(btn2FATOTP) {
+            btn2FATOTP.innerText = 'Contactar Soporte';
+            btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
+          }
         }
       } catch (error) {
         mostrarToast(error.message, 'error');
@@ -92,8 +96,10 @@ async function toggle2FAEmail() {
     if (result.success) {
       mostrarToast(result.message, 'success');
       const btn = $('#btn-2fa-email');
-      btn.innerText = 'Contactar Soporte';
-      btn.onclick = () => window.location.href = 'contacto.html';
+      if(btn) {
+        btn.innerText = 'Contactar Soporte';
+        btn.onclick = () => window.location.href = 'contacto.html';
+      }
     }
   } catch (error) {
     mostrarToast(error.message, 'error');

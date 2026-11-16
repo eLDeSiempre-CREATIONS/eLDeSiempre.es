@@ -11,6 +11,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   
   const usuario = await requireSession();
   if (usuario) {
+    document.getElementById('main-content').style.display = 'block';
     initProfile();
   }
 });

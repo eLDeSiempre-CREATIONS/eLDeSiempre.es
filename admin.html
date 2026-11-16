@@ -17,6 +17,7 @@
         .admin-table th, .admin-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
         .admin-table th { background: var(--card-bg); color: var(--neon-green); }
         .admin-form { background: var(--card-bg); padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .admin-form input, .admin-form textarea, .admin-form select { margin-bottom: 10px; }
     </style>
 </head>
 <body class="locked">
@@ -35,24 +36,27 @@
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('recursos')">Recursos</button>
-            <button class="tab-btn" onclick="switchTab('usuarios')">Usuarios y Permisos</button>
+            <button class="tab-btn" onclick="switchTab('usuarios')">Usuarios</button>
             <button class="tab-btn" onclick="switchTab('guias')">Guías</button>
-            <button class="tab-btn" onclick="switchTab('logs')">Logs de Actividad</button>
+            <button class="tab-btn" onclick="switchTab('logs')">Logs</button>
         </div>
 
         <div id="tab-recursos" class="tab-content active">
             <div class="admin-form">
-                <h3>Añadir Recurso</h3>
+                <h3 id="form-rec-titulo">Añadir Nuevo Recurso</h3>
                 <form id="form-recurso" style="display:grid; gap:10px; margin-top:10px;">
+                    <input type="hidden" id="rec-id">
                     <select id="rec-cat" class="tool-input" required><option value="">Cargando categorías...</option></select>
                     <input type="text" id="rec-titulo" class="tool-input" placeholder="Título" required>
                     <input type="url" id="rec-url" class="tool-input" placeholder="https://..." required>
                     <textarea id="rec-desc" class="tool-input" placeholder="Descripción" required></textarea>
                     <input type="text" id="rec-tipo" class="tool-input" placeholder="Tipo (Curso, Libro, etc)" required>
                     <input type="text" id="rec-ideal" class="tool-input" placeholder="Ideal para...">
-                    <button type="submit" class="btn-primary">Guardar Recurso</button>
+                    <button type="submit" class="btn-primary" id="btn-guardar-rec">Guardar Recurso</button>
+                    <button type="button" class="btn-secondary" id="btn-cancelar-rec" style="display:none;" onclick="cancelarEdicionRecurso()">Cancelar Edición</button>
                 </form>
             </div>
+            <input type="text" id="search-recursos" class="tool-input" placeholder="Buscar recursos por título o descripción..." oninput="buscarRecursos()">
             <div id="lista-recursos"></div>
         </div>
 
@@ -62,14 +66,16 @@
 
         <div id="tab-guias" class="tab-content">
             <div class="admin-form">
-                <h3>Añadir Guía</h3>
+                <h3 id="form-guia-titulo">Añadir Nueva Guía</h3>
                 <form id="form-guia" style="display:grid; gap:10px; margin-top:10px;">
+                    <input type="hidden" id="guia-id">
                     <input type="text" id="guia-slug" class="tool-input" placeholder="slug-de-la-guia" required>
                     <input type="text" id="guia-titulo" class="tool-input" placeholder="Título de la guía" required>
                     <select id="guia-nivel" class="tool-input"><option value="Principiante">Principiante</option><option value="Fácil">Fácil</option><option value="Medio">Medio</option><option value="Difícil">Difícil</option><option value="Experto">Experto</option></select>
                     <select id="guia-login" class="tool-input"><option value="0">Pública</option><option value="1">Requiere Login</option></select>
                     <textarea id="guia-contenido" class="tool-input" rows="5" placeholder="Contenido HTML..." required></textarea>
-                    <button type="submit" class="btn-primary">Guardar Guía</button>
+                    <button type="submit" class="btn-primary" id="btn-guardar-guia">Guardar Guía</button>
+                    <button type="button" class="btn-secondary" id="btn-cancelar-guia" style="display:none;" onclick="cancelarEdicionGuia()">Cancelar Edición</button>
                 </form>
             </div>
             <div id="lista-guias"></div>
@@ -80,6 +86,6 @@
         </div>
     </main>
 
-    <script type="module" src="js/pages/admin.js?v=2"></script>
+    <script type="module" src="js/pages/admin.js?v=3"></script>
 </body>
 </html>

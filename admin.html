@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Administración | eLDeSiempre</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo-text">eLDeSiempre<span>.es</span> | Admin</div>
+        <nav>
+            <button class="nav-btn" onclick="window.location.href='index.html'">Volver a la Web</button>
+            <button class="nav-btn" style="color:var(--danger);" onclick="cerrarSesion()">Salir</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Panel de Control</h2>
+        
+        <div class="auth-form" style="max-width: 800px; margin: 0 auto;">
+            <h3>➕ Añadir Nuevo Recurso</h3>
+            <form id="form-admin">
+                <div class="form-field">
+                    <label>Categoría / Subcategoría</label>
+                    <select id="admin-categoria" class="tool-input" required>
+                        <option value="">Cargando categorías...</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Título del Recurso</label>
+                    <input type="text" id="admin-titulo" class="tool-input" placeholder="Ej: Curso de Python" required>
+                </div>
+                <div class="form-field">
+                    <label>URL (Enlace)</label>
+                    <input type="url" id="admin-url" class="tool-input" placeholder="https://..." required>
+                </div>
+                <div class="form-field">
+                    <label>Descripción</label>
+                    <textarea id="admin-descripcion" class="tool-input" rows="3" placeholder="De qué trata..." required></textarea>
+                </div>
+                <div class="form-field">
+                    <label>Tipo (Etiqueta)</label>
+                    <input type="text" id="admin-tipo" class="tool-input" placeholder="Ej: Curso, Libro, Herramienta" required>
+                </div>
+                <div class="form-field">
+                    <label>Ideal para...</label>
+                    <input type="text" id="admin-ideal" class="tool-input" placeholder="Ej: Aprender desde cero">
+                </div>
+                <div class="form-field">
+                    <label>Paso a paso (HTML permitido)</label>
+                    <textarea id="admin-pasos" class="tool-input" rows="4" placeholder="<ul><li>Paso 1...</li></ul>"></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Guardar Recurso</button>
+            </form>
+            <div id="admin-result" class="tool-result"></div>
+        </div>
+    </main>
+
+    <script type="module" src="js/pages/admin.js"></script>
+</body>
+</html>

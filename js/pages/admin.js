@@ -7,14 +7,26 @@ import { comprobarSesion } from '../auth/session.js';
 const API_ADMIN = `${CONFIG.API_URL}/admin_api.php`;
 
 window.addEventListener('DOMContentLoaded', async () => {
-  const usuario = await comprobarSesion();
-  if (!usuario) { window.location.href = 'login.html'; return; }
-
+  const curtain = document.getElementById('admin-curtain');
+  
   try {
+    const usuario = await comprobarSesion();
+    if (!usuario) {
+      curtain.innerHTML = "&gt; No hay sesión activa. Redirigiendo al login...";
+      setTimeout(() => window.location.href = 'login.html', 1500);
+      return;
+    }
+
     const res = await http.get(`${API_ADMIN}?action=obtener_categorias`);
-    if (!res.success) throw new Error('No admin');
     
-    document.getElementById('admin-curtain').style.display = 'none';
+    if (!res.success) {
+      curtain.innerHTML = `&gt; Acceso Denegado: ${res.message}`;
+      setTimeout(() => window.location.href = 'index.html', 3000);
+      return;
+    }
+    
+    curtain.style.display = 'none';
+    document.body.classList.remove('locked');
     document.getElementById('admin-main').style.display = 'block';
     
     cargarSelectCategorias(res.data);
@@ -23,7 +35,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     cargarGuias();
     cargarLogs();
   } catch (error) {
-    window.location.href = 'index.html';
+    curtain.innerHTML = `&gt; Error de conexión: ${error.message}`;
   }
 });
 
@@ -36,6 +48,7 @@ window.switchTab = (tabId) => {
 
 function cargarSelectCategorias(cats) {
   const select = $('#rec-cat');
+  if (!select) return;
   select.innerHTML = '<option value="">Selecciona categoría...</option>';
   cats.forEach(c => {
     select.innerHTML += `<option value="${c.id}">${c.parent_id ? '└── ' : ''}${c.icono} ${c.nombre}</option>`;
@@ -44,6 +57,7 @@ function cargarSelectCategorias(cats) {
 
 async function cargarRecursos() {
   const res = await http.get(`${API_ADMIN}?action=obtener_recursos`);
+  if (!res.success) return;
   let html = `<table class="admin-table"><tr><th>ID</th><th>Título</th><th>Categoría</th><th>URL</th><th>Acciones</th></tr>`;
   res.data.forEach(r => {
     html += `<tr><td>${r.id}</td><td>${r.titulo}</td><td>${r.categoria_nombre}</td><td><a href="${r.url}" target="_blank" style="color:var(--neon-blue)">Link</a></td>
@@ -55,6 +69,7 @@ async function cargarRecursos() {
 
 async function cargarUsuarios() {
   const res = await http.get(`${API_ADMIN}?action=obtener_usuarios`);
+  if (!res.success) return;
   let html = `<table class="admin-table"><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Admin</th><th>Acciones</th></tr>`;
   res.data.forEach(u => {
     html += `<tr><td>${u.id}</td><td>@${u.usuario}</td><td>${u.correo}</td>
@@ -70,6 +85,7 @@ async function cargarUsuarios() {
 
 async function cargarGuias() {
   const res = await http.get(`${API_ADMIN}?action=obtener_guias`);
+  if (!res.success) return;
   let html = `<table class="admin-table"><tr><th>ID</th><th>Título</th><th>Nivel</th><th>Login</th><th>Acciones</th></tr>`;
   res.data.forEach(g => {
     html += `<tr><td>${g.id}</td><td>${g.titulo}</td><td>${g.nivel}</td><td>${g.requiere_login ? 'Sí' : 'No'}</td>
@@ -81,6 +97,7 @@ async function cargarGuias() {
 
 async function cargarLogs() {
   const res = await http.get(`${API_ADMIN}?action=obtener_logs`);
+  if (!res.success) return;
   let html = `<table class="admin-table"><tr><th>ID</th><th>User ID</th><th>IP</th><th>Herramienta</th><th>Input</th><th>Fecha</th></tr>`;
   res.data.forEach(l => {
     html += `<tr><td>${l.id}</td><td>${l.usuario_id || 'Anón'}</td><td>${l.ip}</td><td>${l.herramienta}</td><td>${l.input_data ? l.input_data.substring(0,20)+'...' : ''}</td><td>${l.fecha}</td></tr>`;
@@ -89,7 +106,7 @@ async function cargarLogs() {
   $('#lista-logs').innerHTML = html;
 }
 
-$('#form-recurso').addEventListener('submit', async (e) => {
+$('#form-recurso')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const payload = {
     accion: 'crear_recurso',
@@ -104,7 +121,7 @@ $('#form-recurso').addEventListener('submit', async (e) => {
   if(res.success) { mostrarToast('Recurso guardado', 'success'); e.target.reset(); cargarRecursos(); }
 });
 
-$('#form-guia').addEventListener('submit', async (e) => {
+$('#form-guia')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const payload = {
     accion: 'crear_guia',

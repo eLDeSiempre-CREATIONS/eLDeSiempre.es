@@ -21,15 +21,17 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://matomo.eldesiempre.es https://api.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com;">
     <title>Donde la seguridad y el conocimiento se encuentran</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body data-nav="inicio">
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     <div id="toast-container" role="status" aria-live="polite"></div>
 
-    <div class="modal-overlay" id="disclaimer-modal" role="dialog" aria-modal="true">
+    <div class="modal-overlay" id="disclaimer-modal" role="dialog" aria-modal="true" aria-labelledby="disclaimer-title">
         <div class="modal-content" style="text-align: left;">
-            <h2>⚠️ Descargo de Responsabilidad</h2>
+            <h2 id="disclaimer-title">⚠️ Descargo de Responsabilidad</h2>
             <p style="margin-bottom: 15px;">Bienvenido a <strong>eLDeSiempre.es</strong>. Antes de continuar, es obligatorio que lea y acepte las siguientes condiciones:</p>
             <ul style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
                 <li>Este sitio web tiene fines <strong>exclusivamente educativos e informativos</strong> sobre ciberseguridad y hacking ético.</li>
@@ -50,11 +52,11 @@
     </div>
 
     <header>
-        <button class="logo-container" onclick="window.location.href='index.html'">
+        <button class="logo-container" onclick="window.location.href='index.html'" aria-label="Ir al inicio">
             <img src="assets/logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
             <div class="logo-text">eLDeSiempre<span>.es</span></div>
         </button>
-        <nav>
+        <nav aria-label="Navegación principal">
             <button class="nav-btn" onclick="window.location.href='biblioteca.html'">Biblioteca</button>
             <button class="nav-btn" onclick="window.location.href='contacto.html'">Contacto</button>
             <button class="nav-btn" id="nav-perfil-btn" style="display:none;" onclick="window.location.href='perfil.html'">Mi Perfil</button>
@@ -65,81 +67,81 @@
     </header>
 
     <main class="container" id="main-content">
-        <div class="hero">
+        <section class="hero">
             <h1>Donde la seguridad y el conocimiento se encuentran</h1>
             <p>Tu directorio definitivo de recursos, herramientas y guías sobre hacking ético. Sin complicaciones, directo al grano.</p>
             <button class="btn-primary" onclick="comprobarAcceso('biblioteca.html')">Explorar Biblioteca</button>
             <button class="btn-secondary" onclick="window.location.href='login.html'">Crear Cuenta Gratis</button>
-        </div>
+        </section>
 
-        <section id="rutas" style="margin-top: 50px;">
-            <h2>Rutas de Aprendizaje (Filtra por Nivel)</h2>
+        <section id="rutas" style="margin-top: 50px;" aria-labelledby="rutas-title">
+            <h2 id="rutas-title">Rutas de Aprendizaje (Filtra por Nivel)</h2>
 
-            <div class="filter-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                <button class="btn-secondary active-filter" onclick="filtrarNivel('todos', this)">Todos</button>
-                <button class="btn-secondary" onclick="filtrarNivel('principiante', this)">Principiante</button>
-                <button class="btn-secondary" onclick="filtrarNivel('intermedio', this)">Intermedio</button>
-                <button class="btn-secondary" onclick="filtrarNivel('avanzado', this)">Avanzado</button>
+            <div class="filter-container" role="group" aria-label="Filtrar por nivel" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="btn-secondary active-filter" onclick="filtrarNivel('todos', this)" aria-pressed="true">Todos</button>
+                <button class="btn-secondary" onclick="filtrarNivel('principiante', this)" aria-pressed="false">Principiante</button>
+                <button class="btn-secondary" onclick="filtrarNivel('intermedio', this)" aria-pressed="false">Intermedio</button>
+                <button class="btn-secondary" onclick="filtrarNivel('avanzado', this)" aria-pressed="false">Avanzado</button>
             </div>
 
             <div class="grid-cards" id="lista-guias" style="margin-top: 20px;">
-                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=introduccion-ciberseguridad'">
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=introduccion-ciberseguridad'" tabindex="0" role="link">
                     <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
                     <h3>Introducción a la Ciberseguridad</h3>
                     <p>Conceptos básicos: CIA, tipos de atacantes y vectores de ataque más comunes. Tu punto de partida.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=introduccion-internet'">
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=introduccion-internet'" tabindex="0" role="link">
                     <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
                     <h3>¿Qué es Internet?</h3>
                     <p>Entiende cómo viajan los datos, qué es una IP y cómo funciona la web antes de intentar hackearla.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=comandos-linux'">
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=comandos-linux'" tabindex="0" role="link">
                     <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
                     <h3>Supervivencia en Linux</h3>
                     <p>Domina la terminal. Aprende los comandos básicos que usarás en el 90% de las herramientas de hacking ético.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=redes-basico'">
+                <article class="card guia-item" data-nivel="principiante" onclick="window.location.href='guia.html?id=redes-basico'" tabindex="0" role="link">
                     <span class="badge badge-curso" style="margin-bottom: 10px; display: inline-block;">Principiante</span>
                     <h3>Redes para Hackers</h3>
                     <p>Entiende IPs, máscaras de subred, puertos y protocolos (TCP/UDP) desde una perspectiva práctica.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Empezar →</p>
                 </article>
 
-                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=ctf-para-principiantes'">
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=ctf-para-principiantes'" tabindex="0" role="link">
                     <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
                     <h3>CTFs: Tu primer paso práctico</h3>
                     <p>Descubre qué son los Capture The Flag y por qué son la mejor forma de aprender hacking ético.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=overthewire-wargames'">
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=overthewire-wargames'" tabindex="0" role="link">
                     <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
                     <h3>OverTheWire: Wargames</h3>
                     <p>Practica con Bandit, Natas y Leviathan. La mejor manera de afianzar comandos y lógica.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=modelo-osi-redes'">
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=modelo-osi-redes'" tabindex="0" role="link">
                     <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
                     <h3>El Modelo OSI</h3>
                     <p>Las 7 capas de la red. Aprende dónde actúa cada ataque (IP, MAC, puertos) y por qué es la base de todo.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
-                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=redes-inalambricas'">
+                <article class="card guia-item" data-nivel="intermedio" onclick="window.location.href='guia.html?id=redes-inalambricas'" tabindex="0" role="link">
                     <span class="badge badge-lab" style="margin-bottom: 10px; display: inline-block;">Intermedio</span>
                     <h3>Wi-Fi y Bluetooth</h3>
                     <p>Domina el espectro radioeléctrico. Aprende sobre protocolos WPA2/WPA3 y ataques de desautenticación.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Estudiar →</p>
                 </article>
 
-                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=hacking-etico-redes'">
+                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=hacking-etico-redes'" tabindex="0" role="link">
                     <span class="badge badge-sistema" style="margin-bottom: 10px; display: inline-block;">Avanzado</span>
                     <h3>Escaneo de Redes</h3>
                     <p>Tu primer paso como hacker. Descubre cómo usar Nmap para encontrar dispositivos y puertos abiertos.</p>
                     <p style="color: var(--neon-gold); font-size: 0.85rem; font-weight: bold; margin-top: auto;">Requisito: Login →</p>
                 </article>
-                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=red-team-pentesting'">
+                <article class="card guia-item" data-nivel="avanzado" onclick="window.location.href='guia.html?id=red-team-pentesting'" tabindex="0" role="link">
                     <span class="badge badge-sistema" style="margin-bottom: 10px; display: inline-block;">Avanzado</span>
                     <h3>Red Team: Active Directory</h3>
                     <p>El nivel experto. Aprende a comprometer entornos corporativos avanzados con Kerberoasting y BloodHound.</p>
@@ -175,10 +177,10 @@
         <p style="margin-top: 20px;">&copy; 2026 eLDeSiempre.es</p>
     </footer>
 
-    <div class="modal-overlay" id="modal-legal" role="dialog" aria-modal="true">
+    <div class="modal-overlay" id="modal-legal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
         <div class="modal-content">
-            <button class="close-btn" onclick="cerrarModal('modal-legal')">×</button>
-            <h2>Información Legal y RGPD</h2>
+            <button class="close-btn" onclick="cerrarModal('modal-legal')" aria-label="Cerrar">×</button>
+            <h2 id="legal-title">Información Legal y RGPD</h2>
             <div style="font-size: 0.92rem; line-height: 1.7; color: var(--text-main);">
                 <h3>1. Aviso Legal</h3>
                 <p>Este sitio web es un proyecto personal sin ánimo de lucro. El titular es el administrador de eLDeSiempre.es. El contenido es meramente educativo.</p>
@@ -192,12 +194,12 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="modal-global-search">
+    <div class="modal-overlay" id="modal-global-search" role="dialog" aria-modal="true" aria-label="Buscador global">
         <div class="modal-content" style="max-width: 600px; padding: 0; overflow: hidden; background: var(--bg-color);">
             <div style="padding: 15px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.2rem;">🔍</span>
-                <input type="text" id="global-search-input" placeholder="Buscar herramientas, guías o recursos... (ESC para cerrar)" style="flex: 1; background: none; border: none; color: var(--text-bright); font-size: 1rem; outline: none;">
-                <button class="close-btn" style="position: static;" onclick="cerrarModal('modal-global-search')">×</button>
+                <span style="font-size: 1.2rem;" aria-hidden="true">🔍</span>
+                <input type="text" id="global-search-input" placeholder="Buscar herramientas, guías o recursos... (ESC para cerrar)" style="flex: 1; background: none; border: none; color: var(--text-bright); font-size: 1rem; outline: none;" aria-label="Buscar">
+                <button class="close-btn" style="position: static;" onclick="cerrarModal('modal-global-search')" aria-label="Cerrar buscador">×</button>
             </div>
             <div id="global-search-results" style="max-height: 400px; overflow-y: auto; padding: 10px;">
                 <p style="color: var(--text-muted); text-align: center;">Escribe al menos 2 letras...</p>

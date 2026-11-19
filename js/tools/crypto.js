@@ -2,8 +2,40 @@ import { mostrarToast } from '../core/toast.js';
 import { $ } from '../core/dom.js';
 import { logHerramienta } from '../core/logger.js';
 
+function decodeBase64Url(str) {
+  let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = base64.length % 4;
+  if (pad) {
+    base64 += '='.repeat(4 - pad);
+  }
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+function encodeUtf8ToBase64(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function decodeBase64ToUtf8(b64) {
+  const binary = atob(b64.trim());
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder().decode(bytes);
+}
+
 export const generarPassword = () => {
-  const length = parseInt($('#slider-longitud').value);
+  const length = parseInt($('#slider-longitud').value, 10);
   const mayus = $('#chk-mayus').checked;
   const minus = $('#chk-minus').checked;
   const nums = $('#chk-nums').checked;
@@ -17,7 +49,7 @@ export const generarPassword = () => {
   if (syms) chars += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
 
   if (!chars) {
-    result.innerHTML = 'Selecciona al menos un tipo de carácter.';
+    result.textContent = 'Selecciona al menos un tipo de carácter.';
     result.style.color = 'var(--danger)';
     return;
   }
@@ -29,20 +61,20 @@ export const generarPassword = () => {
     password += chars[array[i] % chars.length];
   }
 
-  result.innerHTML = password;
+  result.textContent = password;
   result.style.color = 'var(--neon-green)';
-  logHerramienta('Generador de Contraseñas', 'Generar', length.toString(), '***');
+  logHerramienta('Generador de Contraseñas', 'Generar', String(length), '***');
 };
 
 export const limpiarPassword = () => {
-  $('#resultado-password').innerHTML = '';
+  $('#resultado-password').textContent = '';
   logHerramienta('Generador de Contraseñas', 'Limpiar');
 };
 
 export const analizarHash = () => {
   const hash = $('#input-hash').value.trim();
   const result = $('#resultado-hash');
-  if (!hash) return mostrarToast("Pega un hash", "error");
+  if (!hash) return mostrarToast('Pega un hash', 'error');
 
   let type = 'Desconocido';
   if (/^[a-f0-9]{32}$/i.test(hash)) type = 'MD5';
@@ -50,14 +82,14 @@ export const analizarHash = () => {
   else if (/^[a-f0-9]{64}$/i.test(hash)) type = 'SHA-256';
   else if (/^[a-f0-9]{128}$/i.test(hash)) type = 'SHA-512';
 
-  result.innerHTML = `Algoritmo probable: <strong>${type}</strong>`;
+  result.textContent = `Algoritmo probable: ${type}`;
   result.style.color = type !== 'Desconocido' ? 'var(--neon-green)' : 'var(--danger)';
   logHerramienta('Analizador de Hash', 'Analizar', hash.substring(0, 10) + '...', type);
 };
 
 export const limpiarHash = () => {
   $('#input-hash').value = '';
-  $('#resultado-hash').innerHTML = '';
+  $('#resultado-hash').textContent = '';
   logHerramienta('Analizador de Hash', 'Limpiar');
 };
 
@@ -68,9 +100,9 @@ export const procesarBase64 = (accion) => {
 
   try {
     if (accion === 'codificar') {
-      result.textContent = btoa(input);
+      result.textContent = encodeUtf8ToBase64(input);
     } else {
-      result.textContent = atob(input);
+      result.textContent = decodeBase64ToUtf8(input);
     }
     result.style.color = 'var(--neon-green)';
     logHerramienta('Base64', accion, input.substring(0, 20), result.textContent.substring(0, 20));
@@ -83,7 +115,7 @@ export const procesarBase64 = (accion) => {
 export const analizarJWT = () => {
   const token = $('#jwt-input').value.trim();
   const result = $('#jwt-result');
-  if (!token) return mostrarToast("Pega un token JWT", "error");
+  if (!token) return mostrarToast('Pega un token JWT', 'error');
 
   const parts = token.split('.');
   if (parts.length !== 3) {
@@ -93,9 +125,18 @@ export const analizarJWT = () => {
   }
 
   try {
-    const header = JSON.parse(atob(parts[0]));
-    const payload = JSON.parse(atob(parts[1]));
-    result.innerHTML = `<strong>Header:</strong><br><pre>${JSON.stringify(header, null, 2)}</pre><br><strong>Payload:</strong><br><pre>${JSON.stringify(payload, null, 2)}</pre>`;
+    const header = JSON.stringify(JSON.parse(decodeBase64Url(parts[0])), null, 2);
+    const payload = JSON.stringify(JSON.parse(decodeBase64Url(parts[1])), null, 2);
+    result.innerHTML = '';
+    const hTitle = document.createElement('strong');
+    hTitle.textContent = 'Header:';
+    const hPre = document.createElement('pre');
+    hPre.textContent = header;
+    const pTitle = document.createElement('strong');
+    pTitle.textContent = 'Payload:';
+    const pPre = document.createElement('pre');
+    pPre.textContent = payload;
+    result.append(hTitle, document.createElement('br'), hPre, document.createElement('br'), pTitle, document.createElement('br'), pPre);
     result.style.color = 'var(--neon-green)';
   } catch {
     result.textContent = 'Error al decodificar el token.';
@@ -113,7 +154,10 @@ export const generarUUID = () => {
 export const auditarPassword = () => {
   const pass = $('#pass-audit-input').value;
   const result = $('#pass-audit-result');
-  if (!pass) { result.innerHTML = ''; return; }
+  if (!pass) {
+    result.textContent = '';
+    return;
+  }
 
   let score = 0;
   if (pass.length > 8) score++;
@@ -124,8 +168,20 @@ export const auditarPassword = () => {
 
   let color = 'var(--danger)';
   let text = 'Muy débil';
-  if (score >= 3) { color = 'var(--neon-gold)'; text = 'Aceptable'; }
-  if (score >= 5) { color = 'var(--neon-green)'; text = 'Muy fuerte'; }
+  if (score >= 3) {
+    color = 'var(--neon-gold)';
+    text = 'Aceptable';
+  }
+  if (score >= 5) {
+    color = 'var(--neon-green)';
+    text = 'Muy fuerte';
+  }
 
-  result.innerHTML = `Seguridad: <strong style="color:${color}">${text}</strong> (${score}/5)`;
+  result.innerHTML = '';
+  const span = document.createElement('span');
+  span.textContent = 'Seguridad: ';
+  const strong = document.createElement('strong');
+  strong.style.color = color;
+  strong.textContent = `${text} (${score}/5)`;
+  result.append(span, strong);
 };

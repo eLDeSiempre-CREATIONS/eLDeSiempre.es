@@ -1,13 +1,16 @@
 import { CONFIG } from '../core/config.js';
 import { http } from '../core/http.js';
-import { $, hide, show } from '../core/dom.js';
+import { $ } from '../core/dom.js';
 import { mostrarToast } from '../core/toast.js';
 import { abrirModal, cerrarModal } from '../core/modal.js';
 import { getState } from '../core/state.js';
 
 export async function initProfile() {
   const st = getState();
-  if (!st.usuario) return;
+  if (!st.usuario) {
+    window.location.href = 'login.html';
+    return;
+  }
 
   const userSpan = $('#perfil-usuario');
   const nameSpan = $('#perfil-nombre');
@@ -42,6 +45,7 @@ export async function initProfile() {
           btn2FATOTP.innerText = 'Contactar Soporte';
           btn2FATOTP.onclick = () => window.location.href = 'contacto.html';
         } else {
+          btn2FATOTP.innerText = 'Configurar';
           btn2FATOTP.onclick = iniciar2FATOTP;
         }
       }

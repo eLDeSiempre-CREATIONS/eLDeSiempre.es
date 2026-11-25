@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Accede a tu cuenta de eLDeSiempre para guardar recursos, votar tus herramientas favoritas y seguir tu progreso en ciberseguridad.">
+    <meta name="robots" content="noindex, follow">
+    <meta property="og:site_name" content="eLDeSiempre">
+    <meta property="og:title" content="Iniciar Sesión">
+    <meta property="og:description" content="Entra en tu cuenta para continuar tu formación en hacking ético.">
+    <meta property="og:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://eldesiempre.es/login.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@eLDeSiempre_TTV">
+    <meta name="twitter:title" content="Iniciar Sesión">
+    <meta name="twitter:description" content="Entra en tu cuenta para continuar tu formación en hacking ético.">
+    <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta name="theme-color" content="#090909">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net https://matomo.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com; frame-src https://osintframework.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="canonical" href="https://eldesiempre.es/login.html">
+    <title>Iniciar Sesión | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body data-page="login">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <header id="site-header" class="site-header"></header>
+    <div id="site-terminal" class="site-terminal"></div>
+    <main id="main-content" class="container page-main auth-layout">
+
+        <form class="auth-form" id="form-login">
+            <p class="terminal-eyebrow">root@eldesiempre:~# <span>su -</span></p>
+            <h2>Iniciar Sesión</h2>
+            <div class="form-field">
+                <label for="login-correo">Correo electrónico</label>
+                <input type="email" id="login-correo" placeholder="tu@correo.com" maxlength="150" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+                <label for="login-contrasena">Contraseña</label>
+                <input type="password" id="login-contrasena" placeholder="••••••••" maxlength="200" autocomplete="current-password" required>
+            </div>
+            <div class="form-inline-link">
+                <a href="#" data-open-modal="modal-forgot">¿Olvidaste tu contraseña?</a>
+            </div>
+            <button type="submit" class="btn-primary form-submit">Entrar</button>
+            <p class="auth-switch">¿No tienes cuenta? <a href="#" data-auth-toggle>Regístrate aquí</a></p>
+        </form>
+
+        <form class="auth-form" id="form-registro" hidden>
+            <p class="terminal-eyebrow">root@eldesiempre:~# <span>adduser</span></p>
+            <h2>Crear Cuenta</h2>
+            <div class="form-field">
+                <label for="reg-nombre">Nombre completo</label>
+                <input type="text" id="reg-nombre" placeholder="Tu nombre" maxlength="120" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+                <label for="reg-usuario">Nombre de usuario</label>
+                <input type="text" id="reg-usuario" placeholder="usuario123" maxlength="40" autocomplete="username" required>
+            </div>
+            <div class="form-field">
+                <label for="reg-correo">Correo electrónico</label>
+                <input type="email" id="reg-correo" placeholder="tu@correo.com" maxlength="150" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+                <label for="reg-contrasena">Contraseña</label>
+                <input type="password" id="reg-contrasena" placeholder="Mínimo 8 caracteres" minlength="8" maxlength="200" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn-secondary form-submit">Registrarse</button>
+            <p class="auth-switch">¿Ya tienes cuenta? <a href="#" data-auth-toggle>Inicia sesión</a></p>
+        </form>
+        
+    </main>
+    <footer id="site-footer" class="site-footer"></footer>
+    <div id="site-modals">
+        <div class="modal-overlay" id="modal-2fa" role="dialog" aria-modal="true" aria-labelledby="modal-2fa-title">
+            <div class="modal-content modal-content--narrow modal-content--center">
+                <button class="close-btn" type="button" data-close-modal="modal-2fa" aria-label="Cerrar">×</button>
+                <h2 id="modal-2fa-title">Verificación en 2 pasos</h2>
+                <p class="tool-help">Introduce el código de 6 dígitos.</p>
+                <input type="text" id="input-codigo-2fa" class="tool-input tool-input--code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+                <button class="btn-primary form-submit" type="button" id="btn-verificar-2fa">Verificar</button>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-forgot" role="dialog" aria-modal="true" aria-labelledby="modal-forgot-title">
+            <div class="modal-content modal-content--narrow">
+                <button class="close-btn" type="button" data-close-modal="modal-forgot" aria-label="Cerrar">×</button>
+                <h2 id="modal-forgot-title">Recuperar contraseña</h2>
+                <p class="tool-help">Introduce tu correo y te enviaremos un enlace para restablecerla.</p>
+                <div class="form-field">
+                    <label for="forgot-email">Correo electrónico</label>
+                    <input type="email" id="forgot-email" class="tool-input" placeholder="tu@correo.com" maxlength="150" autocomplete="email">
+                </div>
+                <button class="btn-primary form-submit" type="button" id="btn-enviar-reset">Enviar enlace</button>
+            </div>
+        </div>
+        </div>
+    <div id="toast-container" role="status" aria-live="polite"></div>
+    <script type="module" src="js/pages/login.js"></script>
+</body>
+</html>

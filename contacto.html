@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="¿Tienes alguna duda, sugerencia o has encontrado un error? Contacta directamente con el administrador de eLDeSiempre.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:site_name" content="eLDeSiempre">
+    <meta property="og:title" content="Contacto">
+    <meta property="og:description" content="Ponte en contacto con el equipo de eLDeSiempre.">
+    <meta property="og:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://eldesiempre.es/contacto.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@eLDeSiempre_TTV">
+    <meta name="twitter:title" content="Contacto">
+    <meta name="twitter:description" content="Ponte en contacto con el equipo de eLDeSiempre.">
+    <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta name="theme-color" content="#090909">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net https://matomo.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com; frame-src https://osintframework.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="canonical" href="https://eldesiempre.es/contacto.html">
+    <title>Contacto | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body data-page="contacto">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <header id="site-header" class="site-header"></header>
+    <div id="site-terminal" class="site-terminal"></div>
+    <main id="main-content" class="container page-main">
+
+        <div class="terminal-eyebrow">root@eldesiempre:/contacto# <span>mail -s contacto</span></div>
+        <h2>Contacto</h2>
+        <p class="section-intro">¿Tienes alguna consulta o has encontrado un error? Escríbenos.</p>
+
+        <form class="contact-form" id="form-contacto">
+            <div class="honeypot" aria-hidden="true">
+                <label for="contact-website">No rellenar</label>
+                <input type="text" id="contact-website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="form-field">
+                <label for="contact-nombre">Tu nombre</label>
+                <input type="text" id="contact-nombre" placeholder="Nombre" maxlength="100" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+                <label for="contact-email">Tu correo</label>
+                <input type="email" id="contact-email" placeholder="tu@correo.com" maxlength="150" autocomplete="email" required>
+            </div>
+            <div class="form-field">
+                <label for="contact-asunto">Asunto</label>
+                <input type="text" id="contact-asunto" placeholder="Asunto" maxlength="150" required>
+            </div>
+            <div class="form-field">
+                <label for="contact-mensaje">Mensaje</label>
+                <textarea id="contact-mensaje" placeholder="Tu mensaje..." maxlength="4000" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary form-submit">Enviar mensaje</button>
+            <div id="contact-result" class="tool-result" aria-live="polite" hidden></div>
+        </form>
+        
+    </main>
+    <footer id="site-footer" class="site-footer"></footer>
+    <div id="site-modals"></div>
+    <div id="toast-container" role="status" aria-live="polite"></div>
+    <script type="module" src="js/pages/contacto.js"></script>
+</body>
+</html>

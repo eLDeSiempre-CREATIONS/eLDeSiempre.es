@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Gestiona tu perfil, biografía, habilidades y seguridad de la cuenta en eLDeSiempre.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:site_name" content="eLDeSiempre">
+    <meta property="og:title" content="Mi Perfil">
+    <meta property="og:description" content="Gestiona tu cuenta y tu seguridad.">
+    <meta property="og:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://eldesiempre.es/perfil.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@eLDeSiempre_TTV">
+    <meta name="twitter:title" content="Mi Perfil">
+    <meta name="twitter:description" content="Gestiona tu cuenta y tu seguridad.">
+    <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta name="theme-color" content="#090909">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net https://matomo.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com; frame-src https://osintframework.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="canonical" href="https://eldesiempre.es/perfil.html">
+    <title>Mi Perfil | eLDeSiempre.es</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body data-page="perfil">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="curtain" class="curtain" hidden>&gt; Verificando sesión...</div>
+    <header id="site-header" class="site-header"></header>
+    <div id="site-terminal" class="site-terminal"></div>
+    <main id="main-content" class="container page-main">
+
+        <div class="terminal-eyebrow">root@eldesiempre:/perfil# <span>whoami</span></div>
+        <h2>Mi Perfil Profesional</h2>
+        <div class="profile-card">
+            <h2 class="profile-handle">@<span id="perfil-usuario">usuario</span></h2>
+            <p class="profile-welcome">Bienvenido de nuevo, <strong id="perfil-nombre">Nombre</strong>.</p>
+
+            <form class="profile-form" id="form-perfil">
+                <div class="form-field">
+                    <label for="perfil-bio">Biografía</label>
+                    <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..." maxlength="1000"></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="perfil-habilidades">Habilidades</label>
+                    <input type="text" id="perfil-habilidades" placeholder="Pentesting, OSINT..." maxlength="300">
+                </div>
+                <div class="form-field">
+                    <label for="perfil-github">GitHub (URL)</label>
+                    <input type="url" id="perfil-github" placeholder="https://github.com/..." maxlength="300">
+                </div>
+                <button type="submit" class="btn-primary form-submit">Guardar cambios</button>
+            </form>
+
+            <div class="profile-security">
+                <h3>Seguridad</h3>
+                <div class="security-row">
+                    <div>
+                        <strong>Contraseña</strong>
+                        <p>Cambia tu contraseña desde el formulario de restablecimiento.</p>
+                    </div>
+                    <a class="btn-secondary" href="reset.html">Cambiar contraseña</a>
+                </div>
+                <div class="security-row">
+                    <div>
+                        <strong>2FA por Email</strong>
+                        <p>Recibe un código en tu correo al iniciar sesión.</p>
+                    </div>
+                    <button id="btn-2fa-email" class="btn-secondary" type="button">Activar</button>
+                </div>
+                <div class="security-row">
+                    <div>
+                        <strong>App Autenticadora</strong>
+                        <p>Usa Google Authenticator o Authy.</p>
+                    </div>
+                    <button id="btn-2fa-totp" class="btn-secondary" type="button">Configurar</button>
+                </div>
+            </div>
+
+            <a href="https://discord.gg/EakygHQwUu" target="_blank" rel="noopener noreferrer" class="btn-discord">Unirse al Discord</a>
+        </div>
+        
+    </main>
+    <footer id="site-footer" class="site-footer"></footer>
+    <div id="site-modals">
+        <div class="modal-overlay" id="modal-totp" role="dialog" aria-modal="true" aria-labelledby="modal-totp-title">
+            <div class="modal-content modal-content--center">
+                <button class="close-btn" type="button" data-close-modal="modal-totp" aria-label="Cerrar">×</button>
+                <h2 id="modal-totp-title">Configurar Autenticador</h2>
+                <p class="tool-help">Escanea este código con tu app:</p>
+                <div id="qr-container" class="qr-container"></div>
+                <p class="tool-help">O introduce el código manual: <code id="secret-text"></code></p>
+                <input type="text" id="totp-codigo" class="tool-input" placeholder="Código de 6 dígitos" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+                <button class="btn-primary form-submit" type="button" id="btn-confirmar-totp">Verificar y activar</button>
+            </div>
+        </div>
+        </div>
+    <div id="toast-container" role="status" aria-live="polite"></div>
+    <script type="module" src="js/pages/perfil.js"></script>
+</body>
+</html>

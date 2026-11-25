@@ -1,0 +1,351 @@
+<div class="modal-overlay" id="modal-dorks" role="dialog" aria-modal="true" aria-labelledby="dorks-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-dorks" aria-label="Cerrar">×</button>
+    <h2 id="dorks-title">Generador de Dorks Avanzado</h2>
+    <label class="tool-label" for="dork-input">Dominio o URL objetivo</label>
+    <input type="text" id="dork-input" class="tool-input" placeholder="ejemplo.com" autocomplete="off">
+    <div class="tool-row">
+      <div>
+        <label class="tool-label" for="dork-type">Tipo de archivo</label>
+        <select id="dork-type" class="tool-input">
+          <option value="pdf">PDF</option>
+          <option value="doc OR docx">Word</option>
+          <option value="xls OR xlsx">Excel</option>
+          <option value="env">.env</option>
+          <option value="sql">SQL</option>
+          <option value="log">Log</option>
+        </select>
+      </div>
+      <div>
+        <label class="tool-label" for="dork-extra">Filtro</label>
+        <select id="dork-extra" class="tool-input">
+          <option value="">Ninguno</option>
+          <option value="inurl:admin">Admin</option>
+          <option value="intext:password">Contraseñas</option>
+          <option value="intitle:index.of">Directorios</option>
+        </select>
+      </div>
+    </div>
+    <div class="tool-actions">
+      <button class="btn-primary" type="button" data-tool-action="generarDork">Generar</button>
+      <button class="btn-secondary" type="button" data-tool-action="limpiarDorks">Limpiar</button>
+    </div>
+    <div id="dork-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-payloads" role="dialog" aria-modal="true" aria-labelledby="payloads-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-payloads" aria-label="Cerrar">×</button>
+    <h2 id="payloads-title">Generador de Payloads</h2>
+    <label class="tool-label" for="payload-tipo">Tipo</label>
+    <select id="payload-tipo" class="tool-input">
+      <option value="xss">XSS (Cross-Site Scripting)</option>
+      <option value="sqli">SQL Injection</option>
+      <option value="lfi">LFI (Local File Inclusion)</option>
+    </select>
+    <label class="tool-label" for="payload-input">Texto o URL de referencia</label>
+    <input type="text" id="payload-input" class="tool-input" placeholder="Ej: https://tu-web.com" autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="generarPayload">Generar payload</button>
+    <div id="payload-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cve" role="dialog" aria-modal="true" aria-labelledby="cve-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-cve" aria-label="Cerrar">×</button>
+    <h2 id="cve-title">Buscador de CVEs</h2>
+    <label class="tool-label" for="cve-input">Software o término</label>
+    <input type="text" id="cve-input" class="tool-input" placeholder="Ej: Apache, WordPress, Log4j..." autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="buscarCVE">Buscar</button>
+    <div id="cve-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-hash" role="dialog" aria-modal="true" aria-labelledby="hash-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-hash" aria-label="Cerrar">×</button>
+    <h2 id="hash-title">Analizador de Hash</h2>
+    <label class="tool-label" for="input-hash">Hash</label>
+    <input type="text" id="input-hash" class="tool-input" placeholder="Pega el hash..." autocomplete="off">
+    <div class="tool-actions">
+      <button class="btn-primary" type="button" data-tool-action="analizarHash">Analizar</button>
+      <button class="btn-secondary" type="button" data-tool-action="limpiarHash">Limpiar</button>
+    </div>
+    <div id="resultado-hash" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ssl" role="dialog" aria-modal="true" aria-labelledby="ssl-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-ssl" aria-label="Cerrar">×</button>
+    <h2 id="ssl-title">Analizador SSL/TLS</h2>
+    <label class="tool-label" for="ssl-url">URL</label>
+    <input type="url" id="ssl-url" class="tool-input" placeholder="Ej: https://eldesiempre.es">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarSSL">Analizar</button>
+    <div id="ssl-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-http-headers" role="dialog" aria-modal="true" aria-labelledby="headers-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-http-headers" aria-label="Cerrar">×</button>
+    <h2 id="headers-title">Inspector de Cabeceras HTTP</h2>
+    <label class="tool-label" for="header-url">URL</label>
+    <input type="url" id="header-url" class="tool-input" placeholder="Ej: https://eldesiempre.es">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarHeaders">Analizar</button>
+    <div id="header-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-canary" role="dialog" aria-modal="true" aria-labelledby="canary-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-canary" aria-label="Cerrar">×</button>
+    <h2 id="canary-title">Canary Tokens</h2>
+    <p class="tool-help">Elige el tipo de trampa. Canarytokens abrirá su generador oficial en una pestaña nueva.</p>
+    <div class="canary-grid">
+      <button class="canary-card" type="button" data-tool-action="abrirCanarytoken" data-tool-arg="Web bug"><h4>Web bug</h4><p>Alerta cuando alguien visite tu URL.</p></button>
+      <button class="canary-card" type="button" data-tool-action="abrirCanarytoken" data-tool-arg="DNS"><h4>DNS Token</h4><p>Alerta cuando resuelvan tu DNS.</p></button>
+      <button class="canary-card" type="button" data-tool-action="abrirCanarytoken" data-tool-arg="AWS Keys"><h4>Claves de AWS</h4><p>Alerta si usan tus claves.</p></button>
+      <button class="canary-card" type="button" data-tool-action="abrirCanarytoken" data-tool-arg="Word"><h4>Documento Word</h4><p>Alerta si abren el documento.</p></button>
+      <button class="canary-card" type="button" data-tool-action="abrirCanarytoken" data-tool-arg="QR"><h4>Código QR</h4><p>Alerta si escanean el QR.</p></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-osint" role="dialog" aria-modal="true" aria-labelledby="osint-title">
+  <div class="modal-content modal-content--iframe">
+    <button class="close-btn" type="button" data-close-modal="modal-osint" aria-label="Cerrar">×</button>
+    <h2 id="osint-title">OSINT Framework</h2>
+    <iframe src="https://osintframework.com/" class="tool-iframe" title="OSINT Framework" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ip" role="dialog" aria-modal="true" aria-labelledby="ip-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-ip" aria-label="Cerrar">×</button>
+    <h2 id="ip-title">Buscador de IP / OSINT</h2>
+    <label class="tool-label" for="ip-input">Dirección IP</label>
+    <input type="text" id="ip-input" class="tool-input" placeholder="Ej: 8.8.8.8" autocomplete="off">
+    <div class="tool-actions">
+      <button class="btn-primary" type="button" data-tool-action="buscarIP">Analizar</button>
+      <button class="btn-secondary" type="button" data-tool-action="limpiarIP">Limpiar</button>
+    </div>
+    <div id="resultado-ip" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-domain" role="dialog" aria-modal="true" aria-labelledby="domain-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-domain" aria-label="Cerrar">×</button>
+    <h2 id="domain-title">Reconocimiento de Dominio</h2>
+    <label class="tool-label" for="domain-input">Dominio</label>
+    <input type="text" id="domain-input" class="tool-input" placeholder="Ej: eldesiempre.es" autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarDominio">Analizar dominio</button>
+    <div id="domain-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-mac" role="dialog" aria-modal="true" aria-labelledby="mac-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-mac" aria-label="Cerrar">×</button>
+    <h2 id="mac-title">Buscador de Fabricante (MAC)</h2>
+    <label class="tool-label" for="mac-input">Dirección MAC</label>
+    <input type="text" id="mac-input" class="tool-input" placeholder="Ej: 00:1A:2B:3C:4D:5E" autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarMAC">Buscar fabricante</button>
+    <div id="mac-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-email" role="dialog" aria-modal="true" aria-labelledby="email-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-email" aria-label="Cerrar">×</button>
+    <h2 id="email-title">Validador de Correo</h2>
+    <label class="tool-label" for="email-input">Correo electrónico</label>
+    <input type="email" id="email-input" class="tool-input" placeholder="Ej: correo@dominio.com" autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="validarEmail">Validar</button>
+    <div id="email-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-exif" role="dialog" aria-modal="true" aria-labelledby="exif-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-exif" aria-label="Cerrar">×</button>
+    <h2 id="exif-title">Analizador EXIF</h2>
+    <label class="tool-label" for="exif-input">Imagen</label>
+    <input type="file" id="exif-input" accept="image/*" class="tool-input">
+    <div id="exif-result" class="tool-result tool-result--left" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pass" role="dialog" aria-modal="true" aria-labelledby="pass-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-pass" aria-label="Cerrar">×</button>
+    <h2 id="pass-title">Generador de Contraseñas</h2>
+    <div class="gen-controls">
+      <label><input type="checkbox" id="chk-mayus" checked> Mayúsculas</label>
+      <label><input type="checkbox" id="chk-minus" checked> Minúsculas</label>
+      <label><input type="checkbox" id="chk-nums" checked> Números</label>
+      <label><input type="checkbox" id="chk-symbols" checked> Símbolos</label>
+    </div>
+    <div class="gen-slider-container">
+      <input type="range" id="slider-longitud" min="4" max="60" value="16" data-range-output="slider-valor">
+      <span class="gen-slider-value" id="slider-valor">16</span>
+    </div>
+    <div class="tool-actions">
+      <button class="btn-primary" type="button" data-tool-action="generarPassword">Generar</button>
+      <button class="btn-secondary" type="button" data-tool-action="limpiarPassword">Limpiar</button>
+    </div>
+    <div id="resultado-password" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-pass-strength" role="dialog" aria-modal="true" aria-labelledby="pass-strength-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-pass-strength" aria-label="Cerrar">×</button>
+    <h2 id="pass-strength-title">Auditor de Contraseñas</h2>
+    <label class="tool-label" for="pass-audit-input">Contraseña</label>
+    <input type="password" id="pass-audit-input" class="tool-input" placeholder="Escribe una contraseña..." autocomplete="off" data-tool-input="auditarPassword">
+    <div id="pass-audit-result" class="tool-result tool-result--left" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-base64" role="dialog" aria-modal="true" aria-labelledby="base64-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-base64" aria-label="Cerrar">×</button>
+    <h2 id="base64-title">Codificador Base64</h2>
+    <div class="tool-actions">
+      <button class="btn-primary" type="button" data-tool-action="procesarBase64" data-tool-arg="codificar">Codificar</button>
+      <button class="btn-secondary" type="button" data-tool-action="procesarBase64" data-tool-arg="decodificar">Decodificar</button>
+    </div>
+    <label class="tool-label" for="base64-input">Texto</label>
+    <textarea id="base64-input" class="tool-input" placeholder="Texto..." rows="5"></textarea>
+    <div id="base64-result" class="tool-result tool-result--left tool-result--mono" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-jwt" role="dialog" aria-modal="true" aria-labelledby="jwt-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-jwt" aria-label="Cerrar">×</button>
+    <h2 id="jwt-title">Inspector de JWT</h2>
+    <label class="tool-label" for="jwt-input">Token</label>
+    <input type="text" id="jwt-input" class="tool-input" placeholder="Pega el token..." autocomplete="off">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarJWT">Analizar</button>
+    <div id="jwt-result" class="tool-result tool-result--left tool-result--mono" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-json" role="dialog" aria-modal="true" aria-labelledby="json-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-json" aria-label="Cerrar">×</button>
+    <h2 id="json-title">Formateador JSON</h2>
+    <label class="tool-label" for="json-input">JSON</label>
+    <textarea id="json-input" class="tool-input" rows="6" placeholder='Ej: {"nombre":"admin","activo":true}'></textarea>
+    <button class="btn-primary tool-submit" type="button" data-tool-action="formatearJSON">Formatear</button>
+    <div id="json-result" class="tool-result tool-result--left tool-result--mono" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-regex" role="dialog" aria-modal="true" aria-labelledby="regex-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-regex" aria-label="Cerrar">×</button>
+    <h2 id="regex-title">Probador de Regex</h2>
+    <label class="tool-label" for="regex-pattern">Patrón</label>
+    <input type="text" id="regex-pattern" class="tool-input" placeholder="Ej: [a-z]+@[a-z]+\.[a-z]{2,}" autocomplete="off" data-tool-input="probarRegex">
+    <label class="tool-label" for="regex-text">Texto</label>
+    <input type="text" id="regex-text" class="tool-input" placeholder="Ej: mi_correo@dominio.com" autocomplete="off" data-tool-input="probarRegex">
+    <div id="regex-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-timestamp" role="dialog" aria-modal="true" aria-labelledby="timestamp-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-timestamp" aria-label="Cerrar">×</button>
+    <h2 id="timestamp-title">Conversor de Timestamp</h2>
+    <label class="tool-label" for="ts-date-input">Fecha normal</label>
+    <input type="datetime-local" id="ts-date-input" class="tool-input">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="convertirFechaATimestamp">Convertir a timestamp</button>
+    <label class="tool-label" for="ts-input">Timestamp Unix</label>
+    <input type="number" id="ts-input" class="tool-input" placeholder="Ej: 1710514200">
+    <button class="btn-secondary tool-submit" type="button" data-tool-action="convertirTimestampAFecha">Convertir a fecha</button>
+    <div id="ts-result" class="tool-result" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-uuid" role="dialog" aria-modal="true" aria-labelledby="uuid-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-uuid" aria-label="Cerrar">×</button>
+    <h2 id="uuid-title">Generador de UUID</h2>
+    <button class="btn-primary tool-submit" type="button" data-tool-action="generarUUID">Generar nuevo UUID</button>
+    <div id="uuid-result" class="tool-result tool-result--uuid" aria-live="polite" data-tool-onopen="generarUUID"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-wifi" role="dialog" aria-modal="true" aria-labelledby="wifi-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-wifi" aria-label="Cerrar">×</button>
+    <h2 id="wifi-title">Analizador de Red Wi-Fi</h2>
+    <p class="tool-help">Comprueba la información que tu navegador expone sobre la conexión actual.</p>
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarWifi">Analizar mi conexión</button>
+    <div id="wifi-result" class="tool-result tool-result--left" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-dns" role="dialog" aria-modal="true" aria-labelledby="dns-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-dns" aria-label="Cerrar">×</button>
+    <h2 id="dns-title">Fuga de DNS</h2>
+    <p class="tool-help">Comprueba la IP pública y el proveedor que ven los servicios externos.</p>
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarDNS">Comprobar mi DNS</button>
+    <div id="dns-result" class="tool-result tool-result--left" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-robots" role="dialog" aria-modal="true" aria-labelledby="robots-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-robots" aria-label="Cerrar">×</button>
+    <h2 id="robots-title">Analizador de Robots.txt</h2>
+    <label class="tool-label" for="robots-url">URL del sitio</label>
+    <input type="url" id="robots-url" class="tool-input" placeholder="Ej: https://google.com">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarRobots">Ver robots.txt</button>
+    <div id="robots-result" class="tool-result tool-result--left tool-result--mono" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ua" role="dialog" aria-modal="true" aria-labelledby="ua-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-ua" aria-label="Cerrar">×</button>
+    <h2 id="ua-title">Analizador User-Agent</h2>
+    <p class="tool-help">Información que tu navegador envía en cada petición.</p>
+    <div id="ua-result" class="tool-result tool-result--left" aria-live="polite" data-tool-onopen="analizarUA"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-iot-scan" role="dialog" aria-modal="true" aria-labelledby="iot-scan-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-iot-scan" aria-label="Cerrar">×</button>
+    <h2 id="iot-scan-title">Comandos de Red Local</h2>
+    <p class="tool-help">Un navegador no puede escanear tu LAN. Genera los comandos que debes ejecutar en tu terminal local.</p>
+    <label class="tool-label" for="iot-os">Sistema operativo</label>
+    <select id="iot-os" class="tool-input">
+      <option value="auto">Detectar automáticamente</option>
+      <option value="linux">Linux</option>
+      <option value="windows">Windows</option>
+      <option value="macos">macOS</option>
+    </select>
+    <button class="btn-primary tool-submit" type="button" data-tool-action="generarComandosRed">Generar comandos</button>
+    <div id="iot-result" class="tool-result tool-result--left tool-result--mono" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-firmware" role="dialog" aria-modal="true" aria-labelledby="firmware-title">
+  <div class="modal-content">
+    <button class="close-btn" type="button" data-close-modal="modal-firmware" aria-label="Cerrar">×</button>
+    <h2 id="firmware-title">Analizador de Firmware</h2>
+    <p class="tool-help">Extrae cadenas de texto del firmware en tu navegador. El archivo no se sube a ningún servidor.</p>
+    <label class="tool-label" for="firmware-input">Archivo de firmware</label>
+    <input type="file" id="firmware-input" class="tool-input" accept=".bin,.img,.fw,.hex,.tar,.gz,.zip">
+    <button class="btn-primary tool-submit" type="button" data-tool-action="analizarFirmware">Extraer cadenas</button>
+    <div id="firmware-result" class="tool-result tool-result--left" aria-live="polite"></div>
+  </div>
+</div>

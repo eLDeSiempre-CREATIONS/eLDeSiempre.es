@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Panel de administración de eLDeSiempre.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta property="og:site_name" content="eLDeSiempre">
+    <meta property="og:title" content="Administración">
+    <meta property="og:description" content="Panel de control interno.">
+    <meta property="og:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://eldesiempre.es/admin.html">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@eLDeSiempre_TTV">
+    <meta name="twitter:title" content="Administración">
+    <meta name="twitter:description" content="Panel de control interno.">
+    <meta name="twitter:image" content="https://eldesiempre.es/assets/portada.jpg">
+    <meta name="theme-color" content="#090909">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.eldesiempre.es https://matomo.eldesiempre.es https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://osintframework.com https://ipwho.is https://api.allorigins.win https://dns.google https://api.macvendors.com https://services.nvd.nist.gov https://cve.circl.lu; style-src 'self' 'unsafe-inline' https://www.nerdfonts.com https://fonts.googleapis.com https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net https://matomo.eldesiempre.es; img-src 'self' data: https:; font-src 'self' https://www.nerdfonts.com https://fonts.gstatic.com; frame-src https://osintframework.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <link rel="canonical" href="https://eldesiempre.es/admin.html">
+    <title>Dashboard Admin | eLDeSiempre</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body data-page="admin" class="locked">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <div id="curtain" class="curtain">&gt; Verificando credenciales de administrador...</div>
+    <header id="site-header" class="site-header"></header>
+    <div id="site-terminal" class="site-terminal"></div>
+    <main id="main-content" class="container page-main">
+
+        <div id="admin-main" hidden>
+            <div class="terminal-eyebrow">root@eldesiempre:/admin# <span>sudo -i</span></div>
+            <h2>Panel de Control Global</h2>
+
+            <div class="tabs" role="tablist" aria-label="Secciones de administración">
+                <button class="tab-btn active" type="button" role="tab" aria-selected="true" data-tab="recursos">Recursos</button>
+                <button class="tab-btn" type="button" role="tab" aria-selected="false" data-tab="usuarios">Usuarios</button>
+                <button class="tab-btn" type="button" role="tab" aria-selected="false" data-tab="guias">Guías</button>
+                <button class="tab-btn" type="button" role="tab" aria-selected="false" data-tab="logs">Logs</button>
+            </div>
+
+            <section id="tab-recursos" class="tab-content active" role="tabpanel">
+                <div class="admin-form">
+                    <h3 id="form-rec-titulo">Añadir Nuevo Recurso</h3>
+                    <form id="form-recurso" class="admin-grid">
+                        <input type="hidden" id="rec-id">
+                        <select id="rec-cat" class="tool-input" required><option value="">Cargando categorías...</option></select>
+                        <input type="text" id="rec-titulo" class="tool-input" placeholder="Título" maxlength="200" required>
+                        <input type="url" id="rec-url" class="tool-input" placeholder="https://..." maxlength="500" required>
+                        <textarea id="rec-desc" class="tool-input" placeholder="Descripción" maxlength="2000" required></textarea>
+                        <input type="text" id="rec-tipo" class="tool-input" placeholder="Tipo (Curso, Libro, etc.)" maxlength="50" required>
+                        <input type="text" id="rec-ideal" class="tool-input" placeholder="Ideal para..." maxlength="300">
+                        <button type="submit" class="btn-primary" id="btn-guardar-rec">Guardar recurso</button>
+                        <button type="button" class="btn-secondary" id="btn-cancelar-rec" data-admin-action="cancelar-recurso" hidden>Cancelar edición</button>
+                    </form>
+                </div>
+                <input type="search" id="search-recursos" class="tool-input" placeholder="Buscar recursos por título o descripción...">
+                <div id="lista-recursos"></div>
+            </section>
+
+            <section id="tab-usuarios" class="tab-content" role="tabpanel">
+                <div id="lista-usuarios"></div>
+            </section>
+
+            <section id="tab-guias" class="tab-content" role="tabpanel">
+                <div class="admin-form">
+                    <h3 id="form-guia-titulo">Añadir Nueva Guía</h3>
+                    <form id="form-guia" class="admin-grid">
+                        <input type="hidden" id="guia-id">
+                        <input type="text" id="guia-slug" class="tool-input" placeholder="slug-de-la-guia" maxlength="120" required>
+                        <input type="text" id="guia-titulo" class="tool-input" placeholder="Título de la guía" maxlength="200" required>
+                        <select id="guia-nivel" class="tool-input">
+                            <option value="Principiante">Principiante</option>
+                            <option value="Fácil">Fácil</option>
+                            <option value="Medio">Medio</option>
+                            <option value="Difícil">Difícil</option>
+                            <option value="Experto">Experto</option>
+                        </select>
+                        <select id="guia-login" class="tool-input">
+                            <option value="0">Pública</option>
+                            <option value="1">Requiere login</option>
+                        </select>
+                        <textarea id="guia-contenido" class="tool-input" rows="8" placeholder="Contenido HTML..." required></textarea>
+                        <button type="submit" class="btn-primary" id="btn-guardar-guia">Guardar guía</button>
+                        <button type="button" class="btn-secondary" id="btn-cancelar-guia" data-admin-action="cancelar-guia" hidden>Cancelar edición</button>
+                    </form>
+                </div>
+                <div id="lista-guias"></div>
+            </section>
+
+            <section id="tab-logs" class="tab-content" role="tabpanel">
+                <div id="lista-logs"></div>
+            </section>
+        </div>
+        
+    </main>
+    <footer id="site-footer" class="site-footer"></footer>
+    <div id="site-modals"></div>
+    <div id="toast-container" role="status" aria-live="polite"></div>
+    <script type="module" src="js/pages/admin-page.js"></script>
+</body>
+</html>

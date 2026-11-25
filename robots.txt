@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /perfil.html
+Disallow: /reset.html
+Disallow: /js/
+Disallow: /partials/
+Disallow: /api/
+
+Sitemap: https://eldesiempre.es/sitemap.xml

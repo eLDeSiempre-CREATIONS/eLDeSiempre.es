@@ -3,7 +3,7 @@ import { http } from '../core/http.js';
 import { $ } from '../core/dom.js';
 import { mostrarToast } from '../core/toast.js';
 import { abrirModal, cerrarModal } from '../core/modal.js';
-import { getState } from '../core/state.js';
+import { getState, setState } from '../core/state.js';
 
 export async function initProfile() {
   const st = getState();
@@ -14,6 +14,8 @@ export async function initProfile() {
 
   const userSpan = $('#perfil-usuario');
   const nameSpan = $('#perfil-nombre');
+  const fullNameInput = $('#perfil-nombre-completo');
+  const usernameInput = $('#perfil-nombre-usuario');
   const bioInput = $('#perfil-bio');
   const habInput = $('#perfil-habilidades');
   const gitInput = $('#perfil-github');
@@ -26,6 +28,8 @@ export async function initProfile() {
   try {
     const result = await http.get(CONFIG.ENDPOINTS.obtenerPerfil);
     if (result.success) {
+      if (fullNameInput) fullNameInput.value = result.data.nombre_completo || st.usuario.nombre || '';
+      if (usernameInput) usernameInput.value = result.data.usuario || st.usuario.usuario || '';
       if (bioInput) bioInput.value = result.data.bio || '';
       if (habInput) habInput.value = result.data.habilidades || '';
       if (gitInput) gitInput.value = result.data.github || '';
@@ -60,13 +64,21 @@ export async function initProfile() {
       e.preventDefault();
       try {
         const result = await http.post(CONFIG.ENDPOINTS.actualizarPerfil, {
+          nombre_completo: fullNameInput ? fullNameInput.value : '',
+          usuario: usernameInput ? usernameInput.value : '',
           bio: bioInput ? bioInput.value : '',
           habilidades: habInput ? habInput.value : '',
           github: gitInput ? gitInput.value : ''
         });
-        if (result.success) mostrarToast('Perfil actualizado correctamente', 'success');
+        if (result.success) {
+          const usuario = { ...getState().usuario, usuario: result.data.usuario, nombre: result.data.nombre_completo };
+          setState({ usuario });
+          if (userSpan) userSpan.textContent = usuario.usuario;
+          if (nameSpan) nameSpan.textContent = usuario.nombre;
+          mostrarToast(result.message || 'Perfil actualizado correctamente', 'success');
+        }
       } catch (error) {
-        mostrarToast('Error al actualizar el perfil', 'error');
+        mostrarToast(error.message || 'Error al actualizar el perfil', 'error');
       }
     });
   }

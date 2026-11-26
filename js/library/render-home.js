@@ -18,30 +18,34 @@ function toolCount() {
 export function renderQuickAccess(container) {
   if (!container) return;
   container.innerHTML = `
-    <div class="folder-grid">
-      <a class="folder" href="biblioteca.html">
-        <div class="folder-icon">📚</div>
-        <h3>Biblioteca</h3>
-        <p>Recursos, plataformas, certificaciones y documentación organizados por especialidad.</p>
-        <span class="folder-badge">Directorio privado</span>
+    <div class="folder-grid directory-shortcuts">
+      <a class="folder directory-shortcut" href="biblioteca.html">
+        <span class="directory-shortcut-index">01 / RECURSOS</span>
+        <div class="folder-icon" aria-hidden="true">📚</div>
+        <h3>Biblioteca técnica</h3>
+        <p>Documentación, formación, referencias y herramientas externas por especialidad.</p>
+        <span class="folder-badge">Explorar categorías <span aria-hidden="true">→</span></span>
       </a>
-      <a class="folder" href="herramientas.html" style="border-color: var(--neon-green);">
-        <div class="folder-icon">🧰</div>
+      <a class="folder directory-shortcut" href="index.html#rutas">
+        <span class="directory-shortcut-index">02 / CONSULTA</span>
+        <div class="folder-icon" aria-hidden="true">📖</div>
+        <h3>Guías de referencia</h3>
+        <p>Respuestas organizadas por tema para consultar conceptos y buenas prácticas.</p>
+        <span class="folder-badge">Ver guías <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="folder directory-shortcut" href="rutas.html">
+        <span class="directory-shortcut-index">03 / APRENDIZAJE</span>
+        <div class="folder-icon" aria-hidden="true">🎓</div>
+        <h3>Rutas formativas</h3>
+        <p>Itinerarios secuenciales para avanzar desde fundamentos hasta temas técnicos.</p>
+        <span class="folder-badge">Elegir una ruta <span aria-hidden="true">→</span></span>
+      </a>
+      <a class="folder directory-shortcut" href="herramientas.html">
+        <span class="directory-shortcut-index">04 / UTILIDADES</span>
+        <div class="folder-icon" aria-hidden="true">🧰</div>
         <h3>Herramientas</h3>
-        <p>${toolCount()} utilidades interactivas de OSINT, redes, criptografía y análisis.</p>
-        <span class="folder-badge" style="background: var(--neon-green); color: var(--bg-color);">Laboratorio público</span>
-      </a>
-      <a class="folder" href="rutas.html">
-        <div class="folder-icon">🎓</div>
-        <h3>Rutas de aprendizaje</h3>
-        <p>Empieza por los fundamentos y continúa por programación, sistemas, hardware, redes o ensamblador.</p>
-        <span class="folder-badge">Progreso por cuenta</span>
-      </a>
-      <a class="folder" href="biblioteca.html?tipo=cve">
-        <div class="folder-icon">🚨</div>
-        <h3>CVE en tiempo real</h3>
-        <p>Últimas vulnerabilidades publicadas y enlaces a la documentación oficial.</p>
-        <span class="folder-badge">Requiere login</span>
+        <p>${toolCount()} utilidades interactivas para tareas técnicas y aprendizaje.</p>
+        <span class="folder-badge">Abrir laboratorio <span aria-hidden="true">→</span></span>
       </a>
     </div>
   `;

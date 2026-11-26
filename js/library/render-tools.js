@@ -47,8 +47,9 @@ export function renderToolsHome(contenedor) {
   `).join('');
 
   contenedor.innerHTML = terminalWindow('ls ./laboratorio', `
-    <h2 class="terminal-title">Laboratorio de Herramientas</h2>
-    <p class="terminal-intro">Utilidades interactivas que se ejecutan en tu navegador. No requieren instalación ni registro.</p>
+    <p class="section-kicker">DIRECTORIO <span>/</span> HERRAMIENTAS</p>
+    <h2 class="terminal-title">Herramientas técnicas</h2>
+    <p class="terminal-intro">Utilidades para explorar conceptos y realizar tareas técnicas desde el navegador. Revisa cada herramienta y úsala únicamente en sistemas y entornos autorizados.</p>
     <div class="folder-grid">${categories}</div>
   `);
 }

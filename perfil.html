@@ -40,6 +40,16 @@
             <p class="profile-welcome">Bienvenido de nuevo, <strong id="perfil-nombre">Nombre</strong>.</p>
 
             <form class="profile-form" id="form-perfil">
+                <h3>Ajustes de cuenta</h3>
+                <div class="form-field">
+                    <label for="perfil-nombre-completo">Nombre completo</label>
+                    <input type="text" id="perfil-nombre-completo" maxlength="150" autocomplete="name" required>
+                </div>
+                <div class="form-field">
+                    <label for="perfil-nombre-usuario">Nombre de usuario</label>
+                    <input type="text" id="perfil-nombre-usuario" maxlength="20" pattern="[a-zA-Z0-9_]{3,20}" autocomplete="username" required>
+                    <small>3-20 caracteres alfanuméricos o guion bajo.</small>
+                </div>
                 <div class="form-field">
                     <label for="perfil-bio">Biografía</label>
                     <textarea id="perfil-bio" placeholder="Cuéntanos sobre ti..." maxlength="1000"></textarea>
